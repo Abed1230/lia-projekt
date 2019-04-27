@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "211891454807",
+    "firebase_url": "https://karlekstanken.firebaseio.com",
+    "project_id": "karlekstanken",
+    "storage_bucket": "karlekstanken.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211891454807:android:52aa1e21db2f5d22",
+        "android_client_info": {
+          "package_name": "com.sparringpartner.karlekstanken"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "211891454807-g0ppqj1m9b7fsvpmqo32djc760qglj6j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwFjn1TQdOmcavUOIQ0_N380R7XNcCpLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "211891454807-g0ppqj1m9b7fsvpmqo32djc760qglj6j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
