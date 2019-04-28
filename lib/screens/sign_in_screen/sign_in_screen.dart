@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:karlekstanken/auth_error_codes.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:karlekstanken/screens/sign_up_screen/sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   bool _validateAndSave() {
     FormState form = _formKey.currentState;
-    if(form.validate()) {
+    if (form.validate()) {
       form.save();
       return true;
     }
@@ -30,13 +31,14 @@ class _SignInScreenState extends State<SignInScreen> {
   void _validateAndSubmit() async {
     if (_validateAndSave()) {
       try {
-        FirebaseUser user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+        FirebaseUser user = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: _email, password: _password);
         setState(() {
-         _user = user; 
+          _user = user;
         });
-      } catch(e) {
+      } catch (e) {
         String msg = '';
-        switch(e.code) {
+        switch (e.code) {
           case AuthErrorCodes.errorInvalidEmail:
             msg = MyStrings.invalidEmail;
             break;
@@ -51,7 +53,7 @@ class _SignInScreenState extends State<SignInScreen> {
             break;
         }
         setState(() {
-          _errorMessage = msg; 
+          _errorMessage = msg;
         });
       }
     }
@@ -64,10 +66,10 @@ class _SignInScreenState extends State<SignInScreen> {
         child: Text(
           _errorMessage,
           style: TextStyle(
-            fontSize: 13.0,
-            color: Colors.red,
-            height: 1.0,
-            fontWeight: FontWeight.w300),
+              fontSize: 13.0,
+              color: Colors.red,
+              height: 1.0,
+              fontWeight: FontWeight.w300),
         ),
       );
     } else {
@@ -75,6 +77,12 @@ class _SignInScreenState extends State<SignInScreen> {
         height: 0.0,
       );
     }
+  }
+
+  void _navigateToSignUpScreen() {
+    Navigator.push(
+        context, 
+        MaterialPageRoute(builder: (context) => new SignUpScreen()));
   }
 
   @override
@@ -93,31 +101,42 @@ class _SignInScreenState extends State<SignInScreen> {
                 decoration: InputDecoration(labelText: MyStrings.email),
                 keyboardType: TextInputType.emailAddress,
                 onSaved: (value) => _email = value,
-                validator: (value) => value.isEmpty ? MyStrings.emailRequired : null,
+                validator: (value) =>
+                    value.isEmpty ? MyStrings.emailRequired : null,
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: MyStrings.password),
                 obscureText: true,
                 onSaved: (value) => _password = value,
-                validator: (value) => value.isEmpty ? MyStrings.passwordRequired : null,
+                validator: (value) =>
+                    value.isEmpty ? MyStrings.passwordRequired : null,
               ),
               _showErrorMessage(),
               RaisedButton(
                 child: Text(MyStrings.signIn),
                 onPressed: _validateAndSubmit,
               ),
-              _user != null ? Padding(
-                padding: EdgeInsets.all(16.0),
+              FlatButton(
                 child: Text(
-                  'Inloggad användarId: ${_user.uid}',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.green,
-                  ),
+                  MyStrings.signUpBtn,
+                  style: TextStyle(color: Colors.black45),
                 ),
-              ) : Container(
-                height: 0.0,
+                onPressed: _navigateToSignUpScreen,
               ),
+              _user != null
+                  ? Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        'Inloggad användarId: ${_user.uid}',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.green,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      height: 0.0,
+                    ),
             ],
           ),
         ),

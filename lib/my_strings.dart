@@ -9,6 +9,7 @@ class MyStrings {
   static const signUpScreenTitle = 'Registrering';
 
   // Sign in screen
+  static const signUpBtn = 'Har du inget konto? Skapa här';
   static const wrongPassword = 'Fel lösenord';
   static const userNotFoundMsg = 'Det finns ingen användare med angiven epost address';
   static const signInScreenTitle = 'Inloggning';
