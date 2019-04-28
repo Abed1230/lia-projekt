@@ -5,6 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:karlekstanken/screens/sign_up_screen/sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
+  SignInScreen(this.onSignedIn);
+
+  final VoidCallback onSignedIn;
+
   @override
   State<StatefulWidget> createState() => new _SignInScreenState();
 }
@@ -36,6 +40,7 @@ class _SignInScreenState extends State<SignInScreen> {
         setState(() {
           _user = user;
         });
+        widget.onSignedIn();
       } catch (e) {
         String msg = '';
         switch (e.code) {
