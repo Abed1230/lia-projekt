@@ -18,10 +18,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   String _email;
   String _password;
-
   String _errorMessage;
-
-  FirebaseUser _user;
 
   bool _validateAndSave() {
     FormState form = _formKey.currentState;
@@ -37,9 +34,6 @@ class _SignInScreenState extends State<SignInScreen> {
       try {
         FirebaseUser user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
-        setState(() {
-          _user = user;
-        });
         widget.onSignedIn();
       } catch (e) {
         String msg = '';
@@ -64,32 +58,16 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
-  Widget _showErrorMessage() {
-    if (_errorMessage != null && _errorMessage.length > 0) {
-      return new Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Text(
-          _errorMessage,
-          style: TextStyle(
-              fontSize: 13.0,
-              color: Colors.red,
-              height: 1.0,
-              fontWeight: FontWeight.w300),
-        ),
-      );
-    } else {
-      return new Container(
-        height: 0.0,
-      );
-    }
-  }
-
   void _navigateToSignUpScreen() async {
     bool signedIn = await Navigator.push(
-        context, 
-        MaterialPageRoute(builder: (context) => new SignUpScreen()));
-    if (signedIn)
-      widget.onSignedIn();
+        context, MaterialPageRoute(builder: (context) => new SignUpScreen()));
+    if (signedIn != null && signedIn) widget.onSignedIn();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _errorMessage = '';
   }
 
   @override
@@ -130,24 +108,30 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 onPressed: _navigateToSignUpScreen,
               ),
-              _user != null
-                  ? Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        'Inloggad användarId: ${_user.uid}',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.green,
-                        ),
-                      ),
-                    )
-                  : Container(
-                      height: 0.0,
-                    ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _showErrorMessage() {
+    if (_errorMessage.length > 0) {
+      return new Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text(
+          _errorMessage,
+          style: TextStyle(
+              fontSize: 13.0,
+              color: Colors.red,
+              height: 1.0,
+              fontWeight: FontWeight.w300),
+        ),
+      );
+    } else {
+      return new Container(
+        height: 0.0,
+      );
+    }
   }
 }

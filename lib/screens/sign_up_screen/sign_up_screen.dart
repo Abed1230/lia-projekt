@@ -13,10 +13,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   String _email;
   String _password;
-
   String _errorMessage;
-
-  FirebaseUser _user;
 
   bool _validateAndSave() {
     FormState form = _formKey.currentState;
@@ -56,26 +53,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  Widget _showErrorMessage() {
-    if (_errorMessage != null && _errorMessage.length > 0) {
-      return new Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Text(
-          _errorMessage,
-          style: TextStyle(
-              fontSize: 13.0,
-              color: Colors.red,
-              height: 1.0,
-              fontWeight: FontWeight.w300),
-        ),
-      );
-    } else {
-      return new Container(
-        height: 0.0,
-      );
-    }
-  }
-
   String _validateSecondPasswordField(String value) {
     if (value.isEmpty) {
       return MyStrings.passwordRequired;
@@ -83,6 +60,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return MyStrings.passwordMismatchMsg;
     }
     return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _errorMessage = '';
   }
 
   @override
@@ -122,24 +105,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Text(MyStrings.signUp),
                 onPressed: _validateAndSubmit,
               ),
-              _user != null
-                  ? Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        'Registrerad och inloggad, användarId: ${_user.uid}',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.green,
-                        ),
-                      ),
-                    )
-                  : Container(
-                      height: 0.0,
-                    ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _showErrorMessage() {
+    if (_errorMessage.length > 0) {
+      return new Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text(
+          _errorMessage,
+          style: TextStyle(
+              fontSize: 13.0,
+              color: Colors.red,
+              height: 1.0,
+              fontWeight: FontWeight.w300),
+        ),
+      );
+    } else {
+      return new Container(
+        height: 0.0,
+      );
+    }
   }
 }
