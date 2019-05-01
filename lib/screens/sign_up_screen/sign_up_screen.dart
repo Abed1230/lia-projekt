@@ -32,9 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       try {
         FirebaseUser user = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password);
-        setState(() {
-          _user = user;
-        });
+        Navigator.pop(context, true);
       } catch (e) {
         String msg = '';
         switch (e.code) {

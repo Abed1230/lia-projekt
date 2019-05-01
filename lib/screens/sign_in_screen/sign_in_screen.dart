@@ -84,10 +84,12 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
-  void _navigateToSignUpScreen() {
-    Navigator.push(
+  void _navigateToSignUpScreen() async {
+    bool signedIn = await Navigator.push(
         context, 
         MaterialPageRoute(builder: (context) => new SignUpScreen()));
+    if (signedIn)
+      widget.onSignedIn();
   }
 
   @override
