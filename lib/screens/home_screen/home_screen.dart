@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:karlekstanken/my_strings.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen(this._userId);
-
-  final String _userId;
-
   @override
   State<StatefulWidget> createState() => new _HomeScreenState();
 }
@@ -18,8 +14,23 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(MyStrings.homeScreenTitle),
       ),
       body: Center(
-        child: Text(widget._userId),
+        child: RaisedButton(
+          child: Text('go'),
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => new OtherScreen()));
+          },
+        ),
       ),
+    );
+  }
+}
+
+class OtherScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text('Other'),
     );
   }
 }
