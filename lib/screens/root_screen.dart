@@ -44,17 +44,15 @@ class _RootScreenState extends State<RootScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('root screen build...' + _authStatus.toString());
     switch (_authStatus) {
       case AuthStatus.UNDETERMINED:
         return _buildWaitingScreen();
-        break;
       case AuthStatus.NOT_SIGNED_IN:
         return new SignInScreen(_onSignedIn);
-        break;
       case AuthStatus.SIGNED_IN:
         return new HomeScreen();
-        break;
+      default:
+        return _buildWaitingScreen();
     }
   }
 }

@@ -14,23 +14,8 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(MyStrings.homeScreenTitle),
       ),
       body: Center(
-        child: RaisedButton(
-          child: Text('go'),
-          onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => new OtherScreen()));
-          },
-        ),
+        child: Text('Welcome!'),
       ),
-    );
-  }
-}
-
-class OtherScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text('Other'),
     );
   }
 }
