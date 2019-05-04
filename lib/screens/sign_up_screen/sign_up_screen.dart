@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:karlekstanken/auth_error_codes.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -29,6 +30,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       try {
         FirebaseUser user = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password);
+        // Create user document in datbaase
+        Firestore.instance.collection('users').document(user.uid).setData({'paidLicense' : false});
         Navigator.pop(context, true);
       } catch (e) {
         String msg = '';
