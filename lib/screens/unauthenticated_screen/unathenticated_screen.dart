@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/my_strings.dart';
+import 'package:karlekstanken/screens/sign_in_screen/sign_in_screen.dart';
+import 'package:karlekstanken/screens/sign_up_screen/sign_up_screen.dart';
 
 class Section {
   Section(this.locked, this.title, this.description);
@@ -24,21 +26,39 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
   void initState() {
     super.initState();
     _sections = List();
-    _sections.add(Section(false, 'Avsnitt 1 - Introduktion', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
-    _sections.add(Section(true, 'Avsnitt 2', 'Lorem ipsum dolor sit amet'));
-    _sections.add(Section(true, 'Avsnitt 3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
-    _sections.add(Section(true, 'Avsnitt 4', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
-    _sections.add(Section(true, 'Avsnitt 5', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
-    _sections.add(Section(true, 'Avsnitt 6', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
-    _sections.add(Section(true, 'Avsnitt 7', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
-    _sections.add(Section(true, 'Avsnitt 8', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
-    _sections.add(Section(true, 'Avsnitt 9', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
-    _sections.add(Section(true, 'Avsnitt 10', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
+    _sections.add(Section(false, 'Avsnitt 1 - Introduktion',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
+    _sections.add(Section(true, 'Avsnitt 2',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
+    _sections.add(Section(true, 'Avsnitt 3',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
+    _sections.add(Section(true, 'Avsnitt 4',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
+    _sections.add(Section(true, 'Avsnitt 5',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
+    _sections.add(Section(true, 'Avsnitt 6',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
+    _sections.add(Section(true, 'Avsnitt 7',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
+    _sections.add(Section(true, 'Avsnitt 8',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
+    _sections.add(Section(true, 'Avsnitt 9',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
+    _sections.add(Section(true, 'Avsnitt 10',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin at nunc non finibus. Mauris ultrices imperdiet fermentum.'));
   }
 
-  void _navigateToSignInScreen() async {}
+  void _navigateToSignInScreen() async {
+    bool signedIn = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => new SignInScreen()));
+    if (signedIn != null && signedIn) widget.onSignedIn();
+  }
 
-  void _navigateToSignUpScreen() async {}
+  void _navigateToSignUpScreen() async {
+    bool signedIn = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => new SignUpScreen()));
+    if (signedIn != null && signedIn) widget.onSignedIn();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +77,9 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
                   child: Container(
                       height: 90.0,
                       padding: EdgeInsets.all(8.0),
-                      color: _sections[position].locked ? Colors.black12 : Colors.white,
+                      color: _sections[position].locked
+                          ? Colors.black12
+                          : Colors.white,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -96,8 +118,10 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.black54),
                 ),
-                MyRoundedButton(text: MyStrings.signIn, onPressed: _navigateToSignInScreen),
-                MyRoundedButton(text: MyStrings.signUp, onPressed: _navigateToSignUpScreen)
+                MyRoundedButton(
+                    text: MyStrings.signIn, onPressed: _navigateToSignInScreen),
+                MyRoundedButton(
+                    text: MyStrings.signUp, onPressed: _navigateToSignUpScreen)
               ],
             ),
           )
