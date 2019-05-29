@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/chapter.dart';
 import 'package:karlekstanken/my_strings.dart';
+import 'package:karlekstanken/screens/chapter_screen/chapter_screen.dart';
 import 'package:karlekstanken/screens/sign_in_screen/sign_in_screen.dart';
 import 'package:karlekstanken/screens/sign_up_screen/sign_up_screen.dart';
 import 'package:karlekstanken/services/database.dart';
@@ -32,6 +33,11 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
     });
   }
 
+  void _navigateToChapterScreen(Chapter chapter) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => new ChapterScreen(chapter)));
+  }
+
   void _navigateToSignInScreen() async {
     bool signedIn = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => new SignInScreen()));
@@ -59,24 +65,32 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
               itemBuilder: (context, position) {
                 Chapter chapter = chapters[position];
                 return Card(
-                    child: Container(
-                        height: 90.0,
-                        padding: EdgeInsets.all(8.0),
-                        color: chapter.isPaid ? Colors.black12 : Colors.white,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              chapter.title,
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              chapter.description,
-                              style: TextStyle(color: Colors.black54),
-                            )
-                          ],
-                        )));
+                    child: InkWell(
+                        onTap: () {
+                          if (!chapter.isPaid) {
+                            _navigateToChapterScreen(chapter);
+                          }
+                        },
+                        child: Container(
+                            height: 90.0,
+                            padding: EdgeInsets.all(8.0),
+                            color:
+                                chapter.isPaid ? Colors.black12 : Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  chapter.title,
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  chapter.description,
+                                  style: TextStyle(color: Colors.black54),
+                                )
+                              ],
+                            ))));
               },
               itemCount: chapters.length,
             ),
