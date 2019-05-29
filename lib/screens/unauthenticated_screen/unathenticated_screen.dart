@@ -1,35 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:karlekstanken/db_service_provider.dart';
 import 'package:karlekstanken/models/chapter.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:karlekstanken/screens/chapter_screen/chapter_screen.dart';
 import 'package:karlekstanken/screens/sign_in_screen/sign_in_screen.dart';
 import 'package:karlekstanken/screens/sign_up_screen/sign_up_screen.dart';
-import 'package:karlekstanken/services/database.dart';
 
 class UnauthenticatedScreen extends StatefulWidget {
-  UnauthenticatedScreen(this.onSignedIn);
+  UnauthenticatedScreen(this._onSignedIn);
 
-  final VoidCallback onSignedIn;
+  final VoidCallback _onSignedIn;
 
   @override
   State<StatefulWidget> createState() => new _UnauthenticatedScreenState();
 }
 
 class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
-  final db = DatabaseService();
-  List<Chapter> chapters = List();
+  List<Chapter> _chapters = List();
 
   @override
-  void initState() {
-    super.initState();
-    getChapters();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getChapters();
   }
 
-  void getChapters() async {
-    List<Chapter> c = await db.getChapters();
+  void _getChapters() async {
+    List<Chapter> c = await DatabaseServiceProvider.of(context).db.getChapters();
     setState(() {
-      chapters = c;
+      _chapters = c;
     });
   }
 
@@ -41,13 +40,13 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
   void _navigateToSignInScreen() async {
     bool signedIn = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => new SignInScreen()));
-    if (signedIn != null && signedIn) widget.onSignedIn();
+    if (signedIn != null && signedIn) widget._onSignedIn();
   }
 
   void _navigateToSignUpScreen() async {
     bool signedIn = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => new SignUpScreen()));
-    if (signedIn != null && signedIn) widget.onSignedIn();
+    if (signedIn != null && signedIn) widget._onSignedIn();
   }
 
   @override
@@ -63,7 +62,7 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, position) {
-                Chapter chapter = chapters[position];
+                Chapter chapter = _chapters[position];
                 return Card(
                     child: InkWell(
                         onTap: () {
@@ -92,7 +91,7 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
                               ],
                             ))));
               },
-              itemCount: chapters.length,
+              itemCount: _chapters.length,
             ),
             /* child: StreamBuilder(
             stream: Firestore.instance.collection('chapters').snapshots(),
