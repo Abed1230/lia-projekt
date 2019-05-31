@@ -1,6 +1,9 @@
 class MyStrings {
   static const appName = 'Kärlekstanken';
 
+  // Unauthenticated screen
+  static const notSignedInMsg = 'Du är inte inloggad och därmed begränsad till introduktionen';
+
   // Sign up screen
   static const passwordMismatchMsg = 'Lösenorden matchar inte';
   static const repeatPassword = 'Upprepa lösenord';

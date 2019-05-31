@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/db_service_provider.dart';
 import 'package:karlekstanken/models/chapter.dart';
@@ -26,15 +25,17 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
   }
 
   void _getChapters() async {
-    List<Chapter> c = await DatabaseServiceProvider.of(context).db.getChapters();
+    List<Chapter> c = await DatabaseServiceProvider.of(context)
+        .db
+        .getChaptersUnauthenticated();
     setState(() {
       _chapters = c;
     });
   }
 
   void _navigateToChapterScreen(Chapter chapter) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => new ChapterScreen(chapter)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => new ChapterScreen(chapter)));
   }
 
   void _navigateToSignInScreen() async {
@@ -93,43 +94,6 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
               },
               itemCount: _chapters.length,
             ),
-            /* child: StreamBuilder(
-            stream: Firestore.instance.collection('chapters').snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Text('no data');
-              }
-
-              return ListView.builder(
-                itemBuilder: (context, position) {
-                  DocumentSnapshot chapter = snapshot.data.documents[position];
-                  return Card(
-                      child: Container(
-                          height: 90.0,
-                          padding: EdgeInsets.all(8.0),
-                          color: _sections[position].locked
-                              ? Colors.black12
-                              : Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                chapter['title'],
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              Text(
-                                chapter['description'],
-                                style: TextStyle(color: Colors.black54),
-                              )
-                            ],
-                          )));
-                },
-                itemCount: snapshot.data.documents.length,
-              );
-            },
-          ) */
           ),
           // Todo: fix height on landscape mode
           Container(
@@ -148,7 +112,7 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Du är inte inloggad och därmed begränsad till introduktionen',
+                  MyStrings.notSignedInMsg,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.black54),
                 ),

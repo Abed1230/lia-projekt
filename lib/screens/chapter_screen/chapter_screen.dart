@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/chapter.dart';
 import 'package:karlekstanken/db_service_provider.dart';
@@ -28,7 +29,14 @@ class _ChapterScreenState extends State<ChapterScreen> {
   }
 
   void _getTasks() async {
-    List<Task> tasks = await DatabaseServiceProvider.of(context).db.getTasks(_chapter.id);
+    List<Task> tasks;
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    if (user != null) {
+      tasks = await DatabaseServiceProvider.of(context).db.getTasks(_chapter.id);
+    } else {
+      tasks = await DatabaseServiceProvider.of(context).db.getTasksUnauthenticated(_chapter.id);
+    }
+     
     setState(() {
       _tasks = tasks;
     });
