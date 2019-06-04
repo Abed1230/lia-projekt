@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:karlekstanken/auth_error_codes.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:karlekstanken/screens/sign_up_screen/sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
 

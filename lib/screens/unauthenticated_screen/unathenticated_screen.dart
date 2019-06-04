@@ -28,9 +28,11 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
     List<Chapter> c = await DatabaseServiceProvider.of(context)
         .db
         .getChaptersUnauthenticated();
-    setState(() {
+    if (this.mounted) {
+      setState(() {
       _chapters = c;
     });
+    }
   }
 
   void _navigateToChapterScreen(Chapter chapter) {
