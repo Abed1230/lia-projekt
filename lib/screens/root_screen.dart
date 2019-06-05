@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/screens/home_screen/home_screen.dart';
 import 'package:karlekstanken/screens/sign_in_screen/sign_in_screen.dart';
+import 'package:karlekstanken/screens/unauthenticated_screen/unathenticated_screen.dart';
 
 enum AuthStatus { UNDETERMINED, SIGNED_IN, NOT_SIGNED_IN }
 
@@ -48,7 +49,7 @@ class _RootScreenState extends State<RootScreen> {
       case AuthStatus.UNDETERMINED:
         return _buildWaitingScreen();
       case AuthStatus.NOT_SIGNED_IN:
-        return new SignInScreen(_onSignedIn);
+        return new UnauthenticatedScreen(_onSignedIn);
       case AuthStatus.SIGNED_IN:
         return new HomeScreen();
       default:
