@@ -22,6 +22,14 @@ class MyStrings {
   // Home Screen
   static const homeScreenTitle = 'Hem';
 
+  // Pairing Screen
+  static const pairingScreenTitle = 'Parning';
+  static const inputPartnerEmail = 'Ange din partners e-mail address';
+  static const sendRequest = 'Skicka förfrågan';
+  static const waitingFor = 'Väntar på att';
+  static const toAccept = 'ska acceptera din förfrågan';
+  static const receivedRequestMsg = 'vill lägga till dig som partner';
+
   // Common
   static const invalidEmail = 'Ogiltig epost address';
   static const signUp = 'Registrera';
@@ -31,4 +39,7 @@ class MyStrings {
   static const email = 'Epost';
   static const password = 'Lösenord';
   static const signIn = 'Logga in';
+  static const cancel = 'Avbryt';
+  static const accept = 'Acceptera';
+  static const decline = 'Avböj';
 }
