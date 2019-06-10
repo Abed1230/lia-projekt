@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:karlekstanken/widgets/error_message.dart';
 
@@ -9,8 +10,8 @@ class PairingScreen extends StatefulWidget {
 }
 
 class _PairingScreenState extends State<PairingScreen> {
+  User _otherUser;
   String _SendingErrMsg;
-
 
   void _sendPartnerRequest(String email) {
     print('Sending request');
@@ -25,13 +26,18 @@ class _PairingScreenState extends State<PairingScreen> {
   }  
 
   @override
+  void initState() {
+    _otherUser = User(email: 'johndoe@mail.com', name: 'John Doe');
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(MyStrings.pairingScreenTitle),
       ),
       body: Center(
-        child: Padding(padding: EdgeInsets.all(8.0), child: _Sending(_sendPartnerRequest, _SendingErrMsg),//_Received('johndoe@mail.com', _respondPartnerRequest)),//)),
+        child: Padding(padding: EdgeInsets.all(8.0), child: _Received(_otherUser, _respondPartnerRequest)), //_Sending(_sendPartnerRequest, _SendingErrMsg),
       ),
     );
   }
@@ -70,9 +76,9 @@ class _Sending extends StatelessWidget {
 }
 
 class _Sent extends StatelessWidget {
-  _Sent(this._userEmail, this._cancelPartnerRequest);  
+  _Sent(this._user, this._cancelPartnerRequest);  
 
-  String _userEmail;
+  User _user;
   void Function() _cancelPartnerRequest;
 
   @override
@@ -82,7 +88,7 @@ class _Sent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text(MyStrings.waitingFor + ' $_userEmail ' + MyStrings.toAccept),
+          Text(MyStrings.waitingFor + ' ${_user.email} ' + MyStrings.toAccept),
           RaisedButton(
             child: Text(MyStrings.cancel),
             onPressed: _cancelPartnerRequest,
@@ -94,9 +100,9 @@ class _Sent extends StatelessWidget {
 }
 
 class _Received extends StatelessWidget {
-  _Received(this._email, this._respondPartnerRequest);
+  _Received(this._user, this._respondPartnerRequest);
 
-  String _email;
+  User _user;
   void Function(bool accepted) _respondPartnerRequest;
   @override
   Widget build(BuildContext context) {
@@ -105,7 +111,7 @@ class _Received extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text(_email + " " + MyStrings.receivedRequestMsg),
+          Text(_user.email + " " + MyStrings.receivedRequestMsg),
           SizedBox(height: 8.0,),
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
             RaisedButton(
