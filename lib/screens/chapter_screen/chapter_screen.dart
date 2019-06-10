@@ -1,9 +1,11 @@
+import 'package:chewie/chewie.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/chapter.dart';
 import 'package:karlekstanken/db_service_provider.dart';
 import 'package:karlekstanken/my_colors.dart';
-import 'video_player_my.dart';
+import 'package:karlekstanken/screens/chapter_screen/audio_player.dart';
+import 'package:video_player/video_player.dart';
 
 class ChapterScreen extends StatefulWidget {
   ChapterScreen(this._chapter);
@@ -18,16 +20,46 @@ class _ChapterScreenState extends State<ChapterScreen> {
   Chapter _chapter;
   List<Task> _tasks;
 
+  VideoPlayerController _videoPlayerController;
+  ChewieController _chewieController;
+
   @override
   void initState() {
     super.initState();
     _chapter = widget._chapter;
+
+    _videoPlayerController = VideoPlayerController.network(
+        'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4');
+
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoInitialize: true,
+      aspectRatio: 3 / 2,
+      autoPlay: true,
+      looping: true,
+      
+      errorBuilder: (context, errorMessage) {
+        return Center(
+          child: Text(
+            errorMessage,
+            style: TextStyle(color: Colors.white),
+          ),
+        );
+      },
+    );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _getTasks();
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
+    super.dispose();
   }
 
   void _getTasks() async {
@@ -56,9 +88,13 @@ class _ChapterScreenState extends State<ChapterScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          new VideoPlayerScreen(),
+          //new VideoPlayerScreen(),
+          Chewie(
+            controller: _chewieController,
+          ),
           Text(_chapter.video),
           Text(_chapter.text),
+          new MyAudioPlayer(),
           Expanded(
             child: _tasks == null
                 ? Center(child: CircularProgressIndicator())

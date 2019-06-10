@@ -8,7 +8,6 @@ class MyAudioPlayer extends StatefulWidget {
 }
 
 class _MyAudioPlayer extends State<MyAudioPlayer> {
-
   static AudioCache advancedPlayer = new AudioCache(prefix: 'tracks/');
   static AudioPlayer audioPlayer = new AudioPlayer();
   bool playing = false;
@@ -22,37 +21,32 @@ class _MyAudioPlayer extends State<MyAudioPlayer> {
   Future loadMusic() async {
     //advancedPlayer = await AudioCache().loop("assets/tracks/gg.mp3");
   }
-    playLocal() async {
-      advancedPlayer.play('gg.mp3');
-    }
-  
-  
-    playRemote() async {
-      getTrackPosition();
-      if(playing == false)
-      {
-        await audioPlayer.play('https://api.soundcloud.com/tracks/434370309/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P');
-        setState(() {
-          playing = true;
-        });
-      }
-      else
-      if(playing == true)
-      {
-          await audioPlayer.pause();
-                  setState(() {
-          playing = false;
-        });
-      }
+  playLocal() async {
+    advancedPlayer.play('gg.mp3');
   }
 
- getTrackPosition()
-{
-  audioPlayer.onAudioPositionChanged.listen((Duration  p) {
-    print('Current position: $p');
-    return p;
-  });
-}
+  playRemote() async {
+    getTrackPosition();
+    if (playing == false) {
+      await audioPlayer.play(
+          'https://api.soundcloud.com/tracks/434370309/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P');
+      setState(() {
+        playing = true;
+      });
+    } else if (playing == true) {
+      await audioPlayer.pause();
+      setState(() {
+        playing = false;
+      });
+    }
+  }
+
+  getTrackPosition() {
+    audioPlayer.onAudioPositionChanged.listen((Duration p) {
+      print('Current position: $p');
+      return p;
+    });
+  }
 
   @override
   void dispose() {
@@ -60,19 +54,23 @@ class _MyAudioPlayer extends State<MyAudioPlayer> {
     super.dispose();
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 55),
-      child: new Row(
-        children: <Widget>[
-          new RaisedButton(
-            child: playing ? Icon(Icons.pause) : Icon(Icons.play_arrow),
-            onPressed: () {
+    return new Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Card(
+        color: Colors.black,
+        child: new Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            new RaisedButton(
+              child: playing ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+              onPressed: () {
                 playRemote();
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
