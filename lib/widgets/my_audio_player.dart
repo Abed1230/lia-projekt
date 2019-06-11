@@ -1,8 +1,13 @@
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:karlekstanken/my_colors.dart';
 
 class MyAudioPlayer extends StatefulWidget {
+  MyAudioPlayer(this._url);
+
+  String _url;
+
   @override
   _MyAudioPlayer createState() => new _MyAudioPlayer();
 }
@@ -28,8 +33,7 @@ class _MyAudioPlayer extends State<MyAudioPlayer> {
   playRemote() async {
     getTrackPosition();
     if (playing == false) {
-      await audioPlayer.play(
-          'https://api.soundcloud.com/tracks/434370309/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P');
+      await audioPlayer.play(widget._url);
       setState(() {
         playing = true;
       });
@@ -59,16 +63,25 @@ class _MyAudioPlayer extends State<MyAudioPlayer> {
     return new Container(
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Card(
-        color: Colors.black,
+        color: MyColors.secondaryVariant,
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new RaisedButton(
-              child: playing ? Icon(Icons.pause) : Icon(Icons.play_arrow),
-              onPressed: () {
-                playRemote();
-              },
+            Text(
+              'Lyssna', style: TextStyle(color: Colors.white,fontSize: 30),
             ),
+            ButtonTheme(
+              minWidth: 100.0,
+              height: 100.0,
+              child: new FlatButton(
+                child: playing
+                    ? Icon(Icons.pause_circle_outline, size: 80, color: Colors.white,)
+                    : Icon(Icons.play_circle_outline, size: 80,color: Colors.white,),
+                onPressed: () {
+                  playRemote();
+                },
+              ),
+            )
           ],
         ),
       ),
