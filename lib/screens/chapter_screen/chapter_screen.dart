@@ -68,7 +68,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
                     child: Text(
                         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod Lorem ipsum dolor sit amet, consectetur adipiscinorem ipsum dolor sit amet, consectetur adipiscing elit, sed do '),
                   ),
-                  MyAudioPlayer(
+                  MyAudioPlayer(url:
                       'https://api.soundcloud.com/tracks/434370309/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P'),
                   _tasks == null
                       ? Center(child: CircularProgressIndicator())
