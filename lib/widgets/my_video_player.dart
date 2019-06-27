@@ -23,7 +23,7 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
       videoPlayerController: _videoPlayerController,
       autoInitialize: true,
       aspectRatio: 16 / 9,
-      autoPlay: true,
+      autoPlay: false,
       looping: true,
       errorBuilder: (context, errorMessage) {
         return Center(

@@ -65,6 +65,12 @@ class _ChapterScreenState extends State<ChapterScreen> {
                       'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'),
                   Padding(
                     padding: EdgeInsets.all(8.0),
+                  ),
+
+                                    MyVideoPlayer(
+                      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
                     child: Text(
                         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod Lorem ipsum dolor sit amet, consectetur adipiscinorem ipsum dolor sit amet, consectetur adipiscing elit, sed do '),
                   ),

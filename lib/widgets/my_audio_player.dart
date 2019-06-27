@@ -44,8 +44,8 @@ class _MyAudioPlayer extends State<MyAudioPlayer> {
 
   get _isPlaying => _playerState == PlayerState.playing;
   get _isPaused => _playerState == PlayerState.paused;
-  get _durationText => _duration?.toString()?.split('.')?.first ?? '';
-  get _positionText => _position?.toString()?.split('.')?.first ?? '';
+  get _durationText => _duration?.toString()?.substring(3,_position.toString().length)?.split('.')?.first ?? '';
+  get _positionText => _position?.toString()?.substring(3,_position.toString().length)?.split('.')?.first ?? '';
 
  _MyAudioPlayer(this.url, this.isLocal, this.mode);
 
@@ -59,14 +59,14 @@ class _MyAudioPlayer extends State<MyAudioPlayer> {
 
   void subscribeDuration(){
     _durationSubscription = _audioPlayer.onDurationChanged.listen((Duration d) {
-    print('Max duration: $d');
+    //print('Max duration: $d');
     setState(() => _duration = d);
   });
   }
 
   void subscribePosition(){
       _positionSubscription = _audioPlayer.onAudioPositionChanged.listen((Duration  p) {
-    print('Current position: $p');
+    //print('Current position: $p');
     setState(() => _position = p);
   });
   }
@@ -84,7 +84,7 @@ class _MyAudioPlayer extends State<MyAudioPlayer> {
   }
 
   playRemote() async {
-    getTrackPosition();
+    //getTrackPosition();
     if (_playerState == PlayerState.paused) {
       await _audioPlayer.play(url);
       setState(() {
@@ -119,7 +119,6 @@ class _MyAudioPlayer extends State<MyAudioPlayer> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
 
-            Text('Lyssna'),
             ButtonTheme(
               height: 100.0,
               child: new FlatButton(
@@ -139,7 +138,8 @@ class _MyAudioPlayer extends State<MyAudioPlayer> {
                 },
               ),
             ),
-          
+            
+            Text(_positionText+' / '+_durationText,style: TextStyle(color: Colors.white, fontSize: 14),),
             new Slider(
                 value: _position?.inSeconds?.toDouble() ?? 0,
                 onChanged: (double value) =>
