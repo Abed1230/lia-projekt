@@ -13,23 +13,30 @@ class RootScreen extends StatefulWidget {
 
 class _RootScreenState extends State<RootScreen> {
   AuthStatus _authStatus = AuthStatus.UNDETERMINED;
+  String _userId;
 
   @override
   void initState() {
     super.initState();
     FirebaseAuth.instance.currentUser().then((user) {
       setState(() {
-        user == null
-            ? _authStatus = AuthStatus.NOT_SIGNED_IN
-            : _authStatus = AuthStatus.SIGNED_IN;
+        if (user != null) {
+          _userId = user.uid;
+          _authStatus = AuthStatus.SIGNED_IN;
+        } else {
+          _authStatus = AuthStatus.NOT_SIGNED_IN;
+        }
       });
     });
   }
 
   void _onSignedIn() {
-    setState(() {
-      FirebaseAuth.instance.currentUser().then((user) {
-        if (user != null) _authStatus = AuthStatus.SIGNED_IN;
+    FirebaseAuth.instance.currentUser().then((user) {
+      setState(() {
+        if (user != null){
+          _userId = user.uid;
+          _authStatus = AuthStatus.SIGNED_IN;
+        }
       });
     });
   }
@@ -51,7 +58,7 @@ class _RootScreenState extends State<RootScreen> {
       case AuthStatus.NOT_SIGNED_IN:
         return new UnauthenticatedScreen(_onSignedIn);
       case AuthStatus.SIGNED_IN:
-        return new HomeScreen();
+        return new HomeScreen(_userId);
       default:
         return _buildWaitingScreen();
     }
