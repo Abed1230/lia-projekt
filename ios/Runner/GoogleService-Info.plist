@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>211891454807-eavkqm1nm0jfa3li2422qhoifmfs49hi.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.211891454807-eavkqm1nm0jfa3li2422qhoifmfs49hi</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCrCtas8kisl5I4oWBb4rw2J1iOM4rD_0A</string>
+	<key>GCM_SENDER_ID</key>
+	<string>211891454807</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.sparringpartner.karlekstanken</string>
+	<key>PROJECT_ID</key>
+	<string>karlekstanken</string>
+	<key>STORAGE_BUCKET</key>
+	<string>karlekstanken.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:211891454807:ios:52aa1e21db2f5d22</string>
+	<key>DATABASE_URL</key>
+	<string>https://karlekstanken.firebaseio.com</string>
+</dict>
+</plist>
