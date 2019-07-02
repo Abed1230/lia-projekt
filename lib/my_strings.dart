@@ -29,6 +29,8 @@ class MyStrings {
   static const receivedRequestMsg = 'vill lägga till dig som partner';
   static const receiverHasPartnerMsg = 'användaren har redan partner';
   static const receiverHasRequestMsg = 'användare har redan partner förfrågan';
+  static const you = 'Du';
+  static const arePartners = 'är partners';
 
   // Common
   static const userNotFoundMsg =

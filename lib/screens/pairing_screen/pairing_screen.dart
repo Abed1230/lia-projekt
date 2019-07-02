@@ -93,8 +93,29 @@ class _PairingScreenState extends State<PairingScreen> {
     }
   }
 
-  void _respondPartnerRequest(bool accepted) {
-    accepted ? print('accepting...') : print('declining...');
+  void _respondPartnerRequest(bool accepted) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await _cloudFunctions
+          .getHttpsCallable(
+              functionName:
+                  accepted ? 'acceptPartnerRequest' : 'rejectPartnerRequest')
+          .call();
+
+      // success
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('code: ' + e.code + ' message: ' + e.message);
+      // maybe show message?
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -129,7 +150,10 @@ class _PairingScreenState extends State<PairingScreen> {
                           return SizedBox();
                         }
 
-                        if (user.partnerRequestTo != null) {
+                        if (user.partner != null) {
+                          OtherUser other = OtherUser.fromMap(user.partner);
+                          return _Partners(other);
+                        } else if (user.partnerRequestTo != null) {
                           OtherUser other =
                               OtherUser.fromMap(user.partnerRequestTo);
                           return _Sent(other, _cancelPartnerRequest);
@@ -143,11 +167,27 @@ class _PairingScreenState extends State<PairingScreen> {
                         }
                       },
                     ))),
-                    _isLoading
+            _isLoading
                 ? Center(child: CircularProgressIndicator())
                 : SizedBox(),
           ],
         ));
+  }
+}
+
+class _Partners extends StatelessWidget {
+  _Partners(this._user);
+
+  final OtherUser _user;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text(
+        '${MyStrings.you} & ${_user.name} ${MyStrings.arePartners}',
+        style: TextStyle(fontSize: 16.0),
+      ),
+    );
   }
 }
 

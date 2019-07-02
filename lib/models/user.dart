@@ -2,7 +2,7 @@ class User {
   final String uid;
   final String name;
   final String email;
-  final String partner;
+  final Map partner;
   final bool licensed;
   final Map partnerRequestFrom;
   final Map partnerRequestTo;
