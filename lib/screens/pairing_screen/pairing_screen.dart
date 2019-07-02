@@ -33,7 +33,7 @@ class _PairingScreenState extends State<PairingScreen> {
         _cloudFunctions.getHttpsCallable(functionName: 'sendPartnerRequest');
 
     try {
-      //HttpsCallableResult res = 
+      //HttpsCallableResult res =
       await callable.call(<String, dynamic>{
         'email': email,
       });
@@ -46,7 +46,7 @@ class _PairingScreenState extends State<PairingScreen> {
       print('code: ' + e.code + ' message: ' + e.message);
       setState(() {
         // important compare e.message instead of e.code
-        switch(e.message) {
+        switch (e.message) {
           case MyCloudFunctionsErrorCodes.ERROR_USER_NOT_FOUND:
             _sendingErrMsg = MyStrings.userNotFoundMsg;
             break;
@@ -70,8 +70,27 @@ class _PairingScreenState extends State<PairingScreen> {
     }
   }
 
-  void _cancelPartnerRequest() {
-    print('Canceling request...');
+  void _cancelPartnerRequest() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await _cloudFunctions
+          .getHttpsCallable(functionName: 'cancelPartnerRequest')
+          .call();
+
+      // partner request canceled
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('code: ' + e.code + ' message: ' + e.message);
+      // maybe show message?
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _respondPartnerRequest(bool accepted) {
@@ -92,10 +111,10 @@ class _PairingScreenState extends State<PairingScreen> {
         appBar: AppBar(
           title: Text(MyStrings.pairingScreenTitle),
         ),
-        body: Center(
-            child: _isLoading
-                ? CircularProgressIndicator()
-                : Padding(
+        body: Stack(
+          children: <Widget>[
+            Center(
+                child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: StreamBuilder<User>(
                       stream: DatabaseServiceProvider.of(context)
@@ -123,7 +142,12 @@ class _PairingScreenState extends State<PairingScreen> {
                               _sendingTextFieldController);
                         }
                       },
-                    ))));
+                    ))),
+                    _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : SizedBox(),
+          ],
+        ));
   }
 }
 
