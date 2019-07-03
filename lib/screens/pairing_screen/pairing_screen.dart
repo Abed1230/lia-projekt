@@ -4,6 +4,7 @@ import 'package:karlekstanken/models/other_user.dart';
 import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_cloud_functions_error_codes.dart';
 import 'package:karlekstanken/my_strings.dart';
+import 'package:karlekstanken/utils/validators.dart';
 import 'package:karlekstanken/widgets/error_message.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 
@@ -18,10 +19,8 @@ class PairingScreen extends StatefulWidget {
 
 class _PairingScreenState extends State<PairingScreen> {
   CloudFunctions _cloudFunctions;
-
   bool _isLoading;
   String _sendingErrMsg;
-  TextEditingController _sendingTextFieldController;
 
   void _sendPartnerRequest(String email) async {
     setState(() {
@@ -47,6 +46,9 @@ class _PairingScreenState extends State<PairingScreen> {
       setState(() {
         // important compare e.message instead of e.code
         switch (e.message) {
+          case MyCloudFunctionsErrorCodes.ERROR_RECEIVER_EMAIL_IS_SENDERS:
+            _sendingErrMsg = MyStrings.cannotSendPartnerReqToSelfMsg;
+            break;
           case MyCloudFunctionsErrorCodes.ERROR_USER_NOT_FOUND:
             _sendingErrMsg = MyStrings.userNotFoundMsg;
             break;
@@ -123,7 +125,7 @@ class _PairingScreenState extends State<PairingScreen> {
     super.initState();
     _cloudFunctions = CloudFunctions(region: 'europe-west1');
     _isLoading = false;
-    _sendingTextFieldController = new TextEditingController();
+    //_sendingTextFieldController = new TextEditingController();
   }
 
   @override
@@ -162,8 +164,8 @@ class _PairingScreenState extends State<PairingScreen> {
                               OtherUser.fromMap(user.partnerRequestFrom);
                           return _Received(other, _respondPartnerRequest);
                         } else {
-                          return _Sending(_sendPartnerRequest, _sendingErrMsg,
-                              _sendingTextFieldController);
+                          return _Sending(
+                              user.email, _sendPartnerRequest, _sendingErrMsg);
                         }
                       },
                     ))),
@@ -191,12 +193,29 @@ class _Partners extends StatelessWidget {
   }
 }
 
-class _Sending extends StatelessWidget {
-  _Sending(this._sendPartnerRequest, this._errMsg, this._controller);
+class _Sending extends StatefulWidget {
+  _Sending(this._userEmail, this._sendPartnerRequest, this._errMsg);
 
+  final String _userEmail;
   final void Function(String email) _sendPartnerRequest;
   final String _errMsg;
-  final TextEditingController _controller;
+
+  @override
+  __SendingState createState() => __SendingState();
+}
+
+class __SendingState extends State<_Sending> {
+  String _errMsg;
+  TextEditingController _controller = new TextEditingController();
+
+  @override
+  void didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget._errMsg != widget._errMsg) {
+       _errMsg = widget._errMsg;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -206,7 +225,8 @@ class _Sending extends StatelessWidget {
         children: <Widget>[
           TextField(
             controller: _controller,
-            decoration: InputDecoration(labelText: MyStrings.inputPartnerEmail),
+            decoration: InputDecoration(
+                labelText: MyStrings.inputPartnerEmail,),
           ),
           SizedBox(
             height: 8.0,
@@ -215,10 +235,24 @@ class _Sending extends StatelessWidget {
           RaisedButton(
             child: Text(MyStrings.sendRequest),
             onPressed: () {
-              //FocusScope.of(context).requestFocus(new FocusNode());
-              // todo: validate if correct email format
-              if (_controller.text.length > 0)
-                _sendPartnerRequest(_controller.text);
+              // validate if correct email format & email is not users own
+              String email = _controller.text;
+              if (email != widget._userEmail) {
+                if (Validators.validateEmail(email)) {
+                  setState(() {
+                   _errMsg = null; 
+                  });
+                  widget._sendPartnerRequest(email);
+                } else {
+                  setState(() {
+                    _errMsg = MyStrings.invalidEmail;
+                  });
+                }
+              } else {
+                setState(() {
+                  _errMsg = MyStrings.cannotSendPartnerReqToSelfMsg;
+                });
+              }
             },
           )
         ],

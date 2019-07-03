@@ -31,6 +31,7 @@ class MyStrings {
   static const receiverHasRequestMsg = 'användare har redan partner förfrågan';
   static const you = 'Du';
   static const arePartners = 'är partners';
+  static const cannotSendPartnerReqToSelfMsg = 'Du kan inte skicka partner förfrågan till dig själv';
 
   // Common
   static const userNotFoundMsg =
