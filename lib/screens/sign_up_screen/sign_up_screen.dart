@@ -31,7 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         FirebaseUser user = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password);
         // Create user document in datbaase
-        Firestore.instance.collection('users').document(user.uid).setData({'paidLicense' : false});
+        Firestore.instance.collection('users').document(user.uid).setData({'licensed' : false});
         Navigator.pop(context, true);
       } catch (e) {
         String msg = '';

@@ -19,8 +19,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_auth: ^0.8.4+5
-  cloud_firestore: ^0.10.1
+  firebase_core: ^0.4.0+3
+  firebase_auth: ^0.11.1+6
+  cloud_firestore: ^0.12.5
+  cloud_functions: ^0.4.0
   chewie: ^0.9.7
   video_player: ^0.10.0+2
   auto_orientation: ^0.0.2

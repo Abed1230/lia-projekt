@@ -15,14 +15,27 @@ class MyStrings {
   // Sign in screen
   static const signUpBtn = 'Har du inget konto? Skapa här';
   static const wrongPassword = 'Fel lösenord';
-  static const userNotFoundMsg =
-      'Det finns ingen användare med angiven epost address';
   static const signInScreenTitle = 'Inloggning';
 
   // Home Screen
   static const homeScreenTitle = 'Hem';
 
+  // Pairing Screen
+  static const pairingScreenTitle = 'Parning';
+  static const inputPartnerEmail = 'Ange din partners e-mail address';
+  static const sendRequest = 'Skicka förfrågan';
+  static const waitingFor = 'Väntar på att';
+  static const toAccept = 'ska acceptera din förfrågan';
+  static const receivedRequestMsg = 'vill lägga till dig som partner';
+  static const receiverHasPartnerMsg = 'användaren har redan partner';
+  static const receiverHasRequestMsg = 'användare har redan partner förfrågan';
+  static const you = 'Du';
+  static const arePartners = 'är partners';
+  static const cannotSendPartnerReqToSelfMsg = 'Du kan inte skicka partner förfrågan till dig själv';
+
   // Common
+  static const userNotFoundMsg =
+      'Det finns ingen användare med angiven epost address';
   static const invalidEmail = 'Ogiltig epost address';
   static const signUp = 'Registrera';
   static const unknownErrorMsg = 'Ett okänt fel inträffade. Försök igen';
@@ -31,4 +44,7 @@ class MyStrings {
   static const email = 'Epost';
   static const password = 'Lösenord';
   static const signIn = 'Logga in';
+  static const cancel = 'Avbryt';
+  static const accept = 'Acceptera';
+  static const decline = 'Avböj';
 }
