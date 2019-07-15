@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/chapter.dart';
 import 'package:karlekstanken/db_service_provider.dart';
@@ -7,9 +6,10 @@ import 'package:karlekstanken/widgets/my_audio_player.dart';
 import 'package:karlekstanken/widgets/my_video_player.dart';
 
 class ChapterScreen extends StatefulWidget {
-  ChapterScreen(this._chapter);
+  ChapterScreen(this._chapter, this._licensed);
 
   final Chapter _chapter;
+  final bool _licensed;
 
   @override
   _ChapterScreenState createState() => _ChapterScreenState();
@@ -32,17 +32,9 @@ class _ChapterScreenState extends State<ChapterScreen> {
   }
 
   void _getTasks() async {
-    List<Task> tasks;
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    if (user != null) {
-      tasks =
-          await DatabaseServiceProvider.of(context).db.getTasks(_chapter.id);
-    } else {
-      tasks = await DatabaseServiceProvider.of(context)
-          .db
-          .getTasksUnauthenticated(_chapter.id);
-    }
-
+    List<Task> tasks = await DatabaseServiceProvider.of(context)
+        .db
+        .getTasks(_chapter.id, widget._licensed);
     setState(() {
       _tasks = tasks;
     });
@@ -61,21 +53,16 @@ class _ChapterScreenState extends State<ChapterScreen> {
             delegate: SliverChildListDelegate([
               Column(
                 children: <Widget>[
-                  MyVideoPlayer(
-                      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'),
+                  MyVideoPlayer(_chapter.videoUrls?.elementAt(0)),
                   Padding(
                     padding: EdgeInsets.all(8.0),
                   ),
-
-                                    MyVideoPlayer(
-                      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'),
+                  MyVideoPlayer(_chapter.videoUrls?.elementAt(1)),
                   Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Text(
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod Lorem ipsum dolor sit amet, consectetur adipiscinorem ipsum dolor sit amet, consectetur adipiscing elit, sed do '),
+                    child: Text(_chapter.mainText),
                   ),
-                  MyAudioPlayer(url:
-                      'https://api.soundcloud.com/tracks/434370309/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P'),
+                  MyAudioPlayer(url: _chapter.audioUrl),
                   _tasks == null
                       ? Center(child: CircularProgressIndicator())
                       : ListView.builder(

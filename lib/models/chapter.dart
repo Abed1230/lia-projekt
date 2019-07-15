@@ -3,46 +3,60 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Chapter {
   final String id;
   final String title;
-  final String description;
-  final String text;
-  final String video;
-  final bool isPaid;
+  final String previewText;
+  final String mainText;
+  final String audioUrl;
+  final List<String> videoUrls;
+  final bool isPreview;
 
-  Chapter({this.id, this.title, this.description, this.text, this.video, this.isPaid});
+  Chapter(
+      {this.id,
+      this.title,
+      this.previewText,
+      this.mainText,
+      this.audioUrl,
+      this.videoUrls,
+      this.isPreview});
 
   factory Chapter.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
-
+  
     return Chapter(
         id: doc.documentID,
         title: data['title'] ?? 'Title',
-        description: data['description'] ?? 'description',
-        text: data['text'] ?? 'text',
-        video: data['video'] ?? '',
-        isPaid: data['isPaid'] ?? true);
+        previewText: data['previewText'] ?? 'description',
+        mainText: data['mainText'] ?? '',
+        audioUrl: data['audioUrl'],
+        videoUrls: data['videoUrls']?.cast<String>()?.toList(),
+        isPreview: data['isPreview'] ?? true);
   }
-  /*  String get title => _title;
-  String get description => _description;
-  String get text => _text;
-  String get video => _video; */
 }
 
-// Todo update when updateing structure in database
 class Task {
   final String id;
   final String title;
-  final String description;
-  final String video;
+  final String mainText;
+  final String previewText;
+  final String audiourl;
+  final String pdfUrl;
 
-  Task({this.id, this.title, this.description, this.video});
+  Task(
+      {this.id,
+      this.title,
+      this.mainText,
+      this.previewText,
+      this.audiourl,
+      this.pdfUrl});
 
   factory Task.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
 
     return Task(
         id: doc.documentID,
-        title: data['title'] ?? 'title',
-        description: data['description'] ?? 'description',
-        video: data['video'] ?? '');
+        title: data['title'] ?? 'Title',
+        previewText: data['previewText'] ?? 'description',
+        mainText: data['mainText'] ?? '',
+        audiourl: data['audioUrl'],
+        pdfUrl: data['pdfUrl']);
   }
 }

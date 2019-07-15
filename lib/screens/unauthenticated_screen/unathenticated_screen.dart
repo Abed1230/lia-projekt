@@ -27,7 +27,7 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
   void _getChapters() async {
     List<Chapter> c = await DatabaseServiceProvider.of(context)
         .db
-        .getChaptersUnauthenticated();
+        .getChapters(false);
     if (this.mounted) {
       setState(() {
       _chapters = c;
@@ -37,7 +37,7 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
 
   void _navigateToChapterScreen(Chapter chapter) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => new ChapterScreen(chapter)));
+        MaterialPageRoute(builder: (context) => new ChapterScreen(chapter, false)));
   }
 
   void _navigateToSignInScreen() async {
@@ -69,7 +69,7 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
                 return Card(
                     child: InkWell(
                         onTap: () {
-                          if (!chapter.isPaid) {
+                          if (!chapter.isPreview) {
                             _navigateToChapterScreen(chapter);
                           }
                         },
@@ -77,7 +77,7 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
                             height: 90.0,
                             padding: EdgeInsets.all(8.0),
                             color:
-                                chapter.isPaid ? Colors.black12 : Colors.white,
+                                chapter.isPreview ? Colors.black12 : Colors.white,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -88,7 +88,7 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
                                       fontWeight: FontWeight.w500),
                                 ),
                                 Text(
-                                  chapter.description,
+                                  chapter.previewText,
                                   style: TextStyle(color: Colors.black54),
                                 )
                               ],
