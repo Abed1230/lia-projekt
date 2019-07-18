@@ -22,7 +22,7 @@ class MyStrings {
   static const profile = 'Profil';
 
   // Pairing Screen
-  static const pairingScreenTitle = 'Parning';
+  static const pairingScreenTitle = 'Lägg till partner';
   static const inputPartnerEmail = 'Ange din partners e-mail address';
   static const sendRequest = 'Skicka förfrågan';
   static const waitingFor = 'Väntar på att';
@@ -30,11 +30,12 @@ class MyStrings {
   static const receivedRequestMsg = 'vill lägga till dig som partner';
   static const receiverHasPartnerMsg = 'användaren har redan partner';
   static const receiverHasRequestMsg = 'användare har redan partner förfrågan';
-  static const you = 'Du';
   static const arePartners = 'är partners';
   static const cannotSendPartnerReqToSelfMsg = 'Du kan inte skicka partner förfrågan till dig själv';
 
   // Common
+  static const you = 'Du';
+  static const addPartner = 'Lägg till partner';
   static const userNotFoundMsg =
       'Det finns ingen användare med angiven epost address';
   static const invalidEmail = 'Ogiltig epost address';
