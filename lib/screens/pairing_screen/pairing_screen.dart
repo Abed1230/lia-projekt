@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:karlekstanken/db_service_provider.dart';
 import 'package:karlekstanken/models/other_user.dart';
 import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_cloud_functions_error_codes.dart';
@@ -7,6 +6,7 @@ import 'package:karlekstanken/my_strings.dart';
 import 'package:karlekstanken/utils/validators.dart';
 import 'package:karlekstanken/widgets/error_message.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:provider/provider.dart';
 
 class PairingScreen extends StatefulWidget {
   PairingScreen(this._uid);
@@ -139,14 +139,9 @@ class _PairingScreenState extends State<PairingScreen> {
             Center(
                 child: Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: StreamBuilder<User>(
-                      stream: DatabaseServiceProvider.of(context)
-                          .db
-                          .streamUser(widget._uid),
-                      builder:
-                          (BuildContext context, AsyncSnapshot<User> snapshot) {
-                        User user = snapshot.data;
-                        // if user doesn't have a user document
+                    child: Builder(
+                      builder: (context) {
+                        User user = Provider.of<User>(context);
                         if (user == null) {
                           // should handel this another way
                           return SizedBox();
@@ -212,7 +207,7 @@ class __SendingState extends State<_Sending> {
   void didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget._errMsg != widget._errMsg) {
-       _errMsg = widget._errMsg;
+      _errMsg = widget._errMsg;
     }
   }
 
@@ -226,7 +221,8 @@ class __SendingState extends State<_Sending> {
           TextField(
             controller: _controller,
             decoration: InputDecoration(
-                labelText: MyStrings.inputPartnerEmail,),
+              labelText: MyStrings.inputPartnerEmail,
+            ),
           ),
           SizedBox(
             height: 8.0,
@@ -240,7 +236,7 @@ class __SendingState extends State<_Sending> {
               if (email != widget._userEmail) {
                 if (Validators.validateEmail(email)) {
                   setState(() {
-                   _errMsg = null; 
+                    _errMsg = null;
                   });
                   widget._sendPartnerRequest(email);
                 } else {

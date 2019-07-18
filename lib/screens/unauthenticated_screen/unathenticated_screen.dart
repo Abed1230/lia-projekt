@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:karlekstanken/db_service_provider.dart';
 import 'package:karlekstanken/models/chapter.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:karlekstanken/screens/chapter_screen/chapter_screen.dart';
 import 'package:karlekstanken/screens/sign_in_screen/sign_in_screen.dart';
 import 'package:karlekstanken/screens/sign_up_screen/sign_up_screen.dart';
+import 'package:karlekstanken/services/database.dart';
+import 'package:provider/provider.dart';
 
 class UnauthenticatedScreen extends StatefulWidget {
   UnauthenticatedScreen(this._onSignedIn);
@@ -25,19 +26,20 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
   }
 
   void _getChapters() async {
-    List<Chapter> c = await DatabaseServiceProvider.of(context)
-        .db
-        .getChapters(false);
+    List<Chapter> c =
+        await Provider.of<DatabaseService>(context).getChapters(false);
     if (this.mounted) {
       setState(() {
-      _chapters = c;
-    });
+        _chapters = c;
+      });
     }
   }
 
   void _navigateToChapterScreen(Chapter chapter) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => new ChapterScreen(chapter, false)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => new ChapterScreen(chapter, false)));
   }
 
   void _navigateToSignInScreen() async {
@@ -76,8 +78,9 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
                         child: Container(
                             height: 90.0,
                             padding: EdgeInsets.all(8.0),
-                            color:
-                                chapter.isPreview ? Colors.black12 : Colors.white,
+                            color: chapter.isPreview
+                                ? Colors.black12
+                                : Colors.white,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[

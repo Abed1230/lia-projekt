@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:karlekstanken/screens/pairing_screen/pairing_screen.dart';
+import 'package:karlekstanken/services/database.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen(this._userId);
@@ -14,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    print(context.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(MyStrings.homeScreenTitle),
@@ -25,7 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => new PairingScreen(widget._userId)));
+                  builder: (_) => StreamProvider<User>.value(
+                      value: Provider.of<DatabaseService>(context).streamUser(widget._userId), child: PairingScreen(widget._userId))));
         },
       )),
     );
