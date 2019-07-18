@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/chapter.dart';
-import 'package:karlekstanken/db_service_provider.dart';
 import 'package:karlekstanken/my_colors.dart';
+import 'package:karlekstanken/services/database.dart';
 import 'package:karlekstanken/widgets/my_audio_player.dart';
 import 'package:karlekstanken/widgets/my_video_player.dart';
+import 'package:provider/provider.dart';
 
 class ChapterScreen extends StatefulWidget {
   ChapterScreen(this._chapter, this._licensed);
@@ -32,8 +33,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
   }
 
   void _getTasks() async {
-    List<Task> tasks = await DatabaseServiceProvider.of(context)
-        .db
+    List<Task> tasks = await Provider.of<DatabaseService>(context)
         .getTasks(_chapter.id, widget._licensed);
     setState(() {
       _tasks = tasks;
