@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Center(
           child: RaisedButton(
-        child: Text(Provider.of<User>(context)?.email ?? 'Parning'),
+        child: Text('Parning'),
         onPressed: () {
           User user = Provider.of<User>(context);
           Navigator.push(

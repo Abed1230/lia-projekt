@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/screens/home_screen/home_screen.dart';
-import 'package:karlekstanken/screens/sign_in_screen/sign_in_screen.dart';
 import 'package:karlekstanken/screens/unauthenticated_screen/unathenticated_screen.dart';
 import 'package:karlekstanken/services/database.dart';
 import 'package:provider/provider.dart';
@@ -54,6 +54,7 @@ class _RootScreenState extends State<RootScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: use onauthstatechanged to determine auth status
     switch (_authStatus) {
       case AuthStatus.UNDETERMINED:
         return _buildWaitingScreen();
@@ -61,8 +62,8 @@ class _RootScreenState extends State<RootScreen> {
         return new UnauthenticatedScreen(_onSignedIn);
       case AuthStatus.SIGNED_IN:
         DatabaseService dbService = Provider.of<DatabaseService>(context);
-        return new StreamProvider(
-            builder: (context) => dbService.streamUser(_userId),
+        return new StreamProvider<User>.value(
+            value: dbService.streamUser(_userId),
             child: new HomeScreen(_userId));
       default:
         return _buildWaitingScreen();
