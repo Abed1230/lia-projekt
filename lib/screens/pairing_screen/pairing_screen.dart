@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:karlekstanken/db_service_provider.dart';
 import 'package:karlekstanken/models/other_user.dart';
 import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_cloud_functions_error_codes.dart';
