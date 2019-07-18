@@ -64,7 +64,7 @@ class _RootScreenState extends State<RootScreen> {
         DatabaseService dbService = Provider.of<DatabaseService>(context);
         return new StreamProvider<User>.value(
             value: dbService.streamUser(_userId),
-            child: new HomeScreen(_userId));
+            child: new HomeScreen());
       default:
         return _buildWaitingScreen();
     }

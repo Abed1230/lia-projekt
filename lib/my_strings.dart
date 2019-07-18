@@ -18,7 +18,8 @@ class MyStrings {
   static const signInScreenTitle = 'Inloggning';
 
   // Home Screen
-  static const homeScreenTitle = 'Hem';
+  static const home = 'Hem';
+  static const profile = 'Profil';
 
   // Pairing Screen
   static const pairingScreenTitle = 'Parning';
