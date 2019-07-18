@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:karlekstanken/screens/pairing_screen/pairing_screen.dart';
+import 'package:karlekstanken/services/database.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,12 +26,11 @@ class _HomeScreenState extends State<HomeScreen> {
           child: RaisedButton(
         child: Text('Parning'),
         onPressed: () {
-          User user = Provider.of<User>(context);
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => Provider.value(
-                      value: user, child: PairingScreen(widget._userId))));
+                  builder: (_) => StreamProvider<User>.value(
+                      value: Provider.of<DatabaseService>(context).streamUser(widget._userId), child: PairingScreen(widget._userId))));
         },
       )),
     );
