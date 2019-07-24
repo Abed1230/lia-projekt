@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:karlekstanken/models/couple_data.dart';
+import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:karlekstanken/screens/home_screen/widgets/home.dart';
 import 'package:karlekstanken/screens/home_screen/widgets/profile.dart';
+import 'package:karlekstanken/services/database.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -20,20 +24,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    _children = <Widget>[
-      const Home(),
-      Profile()
-    ];
+    _children = <Widget>[const Home(), Profile()];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    DatabaseService dbService = Provider.of<DatabaseService>(context);
+    User user = Provider.of<User>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text(MyStrings.appName)),
       ),
-      body: _children[_selectedIndex],
+      body: StreamProvider<CoupleData>.value(
+          value: dbService.streamCoupleData(user?.coupleDataRef),
+          child: _children[_selectedIndex]),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

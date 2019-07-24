@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/chapter.dart';
+import 'package:karlekstanken/models/couple_data.dart';
+import 'package:karlekstanken/models/progress.dart';
 import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/screens/chapter_screen/chapter_screen.dart';
 import 'package:karlekstanken/services/database.dart';
@@ -24,6 +26,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context);
+    Progress progress = Provider.of<CoupleData>(context)?.progress;
+  
     return user != null
         ? FutureBuilder(
             future: Provider.of<DatabaseService>(context)
@@ -36,6 +40,9 @@ class _HomeState extends State<Home> {
                 itemBuilder: (context, position) {
                   Chapter chapter = chapters[position];
                   return ChapterListItem(
+                    completed: progress != null
+                        ? progress.isChapterCompleted(chapter.id)
+                        : false,
                     disabled: chapter.isPreview,
                     title: chapter.title,
                     description: chapter.previewText,
