@@ -29,25 +29,25 @@ class _HomeState extends State<Home> {
             future: Provider.of<DatabaseService>(context)
                 .getChapters(user.licensed ? true : false),
             builder: (context, snapshot) {
+              if (!snapshot.hasData) return SizedBox();
+
               List<Chapter> chapters = snapshot.data;
-              return chapters != null
-                  ? ListView.builder(
-                      itemBuilder: (context, position) {
-                        Chapter chapter = chapters[position];
-                        return ChapterListItem(
-                          disabled: chapter.isPreview,
-                          title: chapter.title,
-                          description: chapter.previewText,
-                          onTap: () {
-                            if (!chapter.isPreview) {
-                              _navigateToChapterScreen(chapter, user.licensed);
-                            }
-                          },
-                        );
-                      },
-                      itemCount: chapters.length,
-                    )
-                  : SizedBox();
+              return ListView.builder(
+                itemBuilder: (context, position) {
+                  Chapter chapter = chapters[position];
+                  return ChapterListItem(
+                    disabled: chapter.isPreview,
+                    title: chapter.title,
+                    description: chapter.previewText,
+                    onTap: () {
+                      if (!chapter.isPreview) {
+                        _navigateToChapterScreen(chapter, user.licensed);
+                      }
+                    },
+                  );
+                },
+                itemCount: chapters.length,
+              );
             },
           )
         : SizedBox();

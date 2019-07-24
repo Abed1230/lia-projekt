@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ChapterListItem extends StatelessWidget {
-  ChapterListItem({this.disabled, this.title, this.description, this.onTap});
+  ChapterListItem(
+      {this.completed,
+      this.disabled,
+      this.title,
+      this.description,
+      this.onTap});
 
+  final bool completed;
   final bool disabled;
   final String title;
   final String description;
@@ -16,7 +22,9 @@ class ChapterListItem extends StatelessWidget {
             child: Container(
                 height: 90.0,
                 padding: EdgeInsets.all(8.0),
-                color: disabled ? Colors.black12 : Colors.white,
+                color: disabled
+                    ? Colors.black12
+                    : completed ? Colors.green : Colors.white,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
