@@ -23,7 +23,7 @@ class Progress {
     if (tasks != null && tasks[id] != null)
       return tasks[id];
     else 
-      return tasks[id];
+      return false;
   }
 
   bool isAllTasksCompleted(List<String> taskIds)  {
