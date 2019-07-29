@@ -1,10 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/other_user.dart';
 import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:karlekstanken/screens/pairing_screen/pairing_screen.dart';
-import 'package:karlekstanken/services/database.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -14,13 +12,8 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   void _navigateToPairingScreen() {
-    String userId = Provider.of<FirebaseUser>(context).uid;
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => StreamProvider<User>.value(
-                value: Provider.of<DatabaseService>(context).streamUser(userId),
-                child: PairingScreen(userId))));
+        context, MaterialPageRoute(builder: (_) => new PairingScreen(null)));
   }
 
   @override
