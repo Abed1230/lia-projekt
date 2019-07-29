@@ -37,15 +37,17 @@ class _ChapterScreenState extends State<ChapterScreen> {
   void _getTasks() async {
     List<Task> tasks = await Provider.of<DatabaseService>(context)
         .getTasks(_chapter.id, widget._licensed);
-    setState(() {
-      _tasks = tasks;
-    });
+    if (this.mounted) {
+      setState(() {
+        _tasks = tasks;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     Progress progress = Provider.of<CoupleData>(context)?.progress;
-
+    
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -76,7 +78,8 @@ class _ChapterScreenState extends State<ChapterScreen> {
                           itemBuilder: (context, pos) {
                             Task task = _tasks[pos];
                             return TaskListItem(
-                              completed: progress?.isTaskCompleted(task.id) ?? false,
+                              completed:
+                                  progress?.isTaskCompleted(task.id) ?? false,
                               title: task.title,
                               onTap: () {},
                             );
