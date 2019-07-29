@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/chapter.dart';
 import 'package:karlekstanken/my_colors.dart';
+import 'package:karlekstanken/screens/chapter_screen/widgets/task_list_item.dart';
 import 'package:karlekstanken/services/database.dart';
 import 'package:karlekstanken/widgets/my_audio_player.dart';
 import 'package:karlekstanken/widgets/my_video_player.dart';
@@ -41,7 +42,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -70,74 +71,18 @@ class _ChapterScreenState extends State<ChapterScreen> {
                           physics: ClampingScrollPhysics(),
                           itemCount: _tasks.length,
                           itemBuilder: (context, pos) {
-                            return GestureDetector(
+                            Task task = _tasks[pos];
+                            return TaskListItem(
+                              completed: true,
+                              title: task.title,
                               onTap: () {},
-                              child: ExerciseBox(_tasks[pos].title, false),
                             );
-                          },
-                        ),
+                          }),
                 ],
               )
             ]),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class ExerciseBox extends StatelessWidget {
-  final String title;
-  final bool complete;
-
-  ExerciseBox(this.title, this.complete);
-
-  @override
-  Widget build(BuildContext context) {
-    return new Card(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 5),
-        color: MyColors.secondary,
-        child: Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
-            //crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              new Container(
-                alignment: Alignment.center,
-                child: Container(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        new Container(
-                          padding: EdgeInsets.fromLTRB(45, 15, 50, 15),
-                          child: Text(
-                            title,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        complete
-                            ? new Container(
-                                padding: EdgeInsets.fromLTRB(45, 0, 50, 0),
-                                child: Text(
-                                  'Färdig',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green[500],
-                                  ),
-                                ),
-                              )
-                            : SizedBox(),
-                      ]),
-                ),
-              ),
-            ]),
       ),
     );
   }
