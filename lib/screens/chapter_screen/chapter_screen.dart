@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/chapter.dart';
-import 'package:karlekstanken/my_colors.dart';
+import 'package:karlekstanken/models/couple_data.dart';
+import 'package:karlekstanken/models/progress.dart';
 import 'package:karlekstanken/screens/chapter_screen/widgets/task_list_item.dart';
 import 'package:karlekstanken/services/database.dart';
 import 'package:karlekstanken/widgets/my_audio_player.dart';
@@ -42,7 +43,9 @@ class _ChapterScreenState extends State<ChapterScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
+    Progress progress = Provider.of<CoupleData>(context)?.progress;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -73,7 +76,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
                           itemBuilder: (context, pos) {
                             Task task = _tasks[pos];
                             return TaskListItem(
-                              completed: true,
+                              completed: progress?.isTaskCompleted(task.id) ?? false,
                               title: task.title,
                               onTap: () {},
                             );
