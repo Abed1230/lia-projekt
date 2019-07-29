@@ -48,4 +48,16 @@ class DatabaseService {
 
     return ref.snapshots().map((snap) => CoupleData.fromMap(snap.data));
   }
+
+  void updateChapterCompletionStatus(
+      DocumentReference coupleDataRef,
+      String chapterId,
+      bool isChapterCompleted,
+      String taskId,
+      bool isTaskCompleted) {
+    coupleDataRef.updateData({
+      'progress.chapters.$chapterId': isChapterCompleted,
+      'progress.tasks.$taskId': isTaskCompleted
+    });
+  }
 }

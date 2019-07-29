@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/chapter.dart';
 import 'package:karlekstanken/models/couple_data.dart';
 import 'package:karlekstanken/models/progress.dart';
+import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/screens/chapter_screen/widgets/task_list_item.dart';
 import 'package:karlekstanken/services/database.dart';
 import 'package:karlekstanken/widgets/my_audio_player.dart';
@@ -44,10 +45,34 @@ class _ChapterScreenState extends State<ChapterScreen> {
     }
   }
 
+  void onTaskTapped(Progress progress, Task task) {
+    if (progress == null) return;
+
+    // Reverse completion
+    bool isTaskCompleted = !progress.isTaskCompleted(task.id);
+
+    List<String> taskIds = _tasks.fold([], (res, t) {
+      if (t.id != task.id) {
+        res.add(t.id);
+      }
+      return res;
+    });
+
+    bool isChapterCompleted =
+        isTaskCompleted && progress.isAllTasksCompleted(taskIds);
+
+    Provider.of<DatabaseService>(context).updateChapterCompletionStatus(
+        Provider.of<User>(context).coupleDataRef,
+        _chapter.id,
+        isChapterCompleted,
+        task.id,
+        isTaskCompleted);
+  }
+
   @override
   Widget build(BuildContext context) {
     Progress progress = Provider.of<CoupleData>(context)?.progress;
-    
+
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -81,7 +106,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
                               completed:
                                   progress?.isTaskCompleted(task.id) ?? false,
                               title: task.title,
-                              onTap: () {},
+                              onTap: () => onTaskTapped(progress, task),
                             );
                           }),
                 ],

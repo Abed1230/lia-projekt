@@ -27,6 +27,7 @@ class Progress {
   }
 
   bool isAllTasksCompleted(List<String> taskIds)  {
+    if (tasks == null) return false;
     int count = 0;
     for (String id in taskIds) {
       if (tasks[id] != null && tasks[id])
