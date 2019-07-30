@@ -56,8 +56,8 @@ class DatabaseService {
       String taskId,
       bool isTaskCompleted) {
     coupleDataRef.updateData({
-      'progress.chapters.$chapterId': isChapterCompleted,
-      'progress.tasks.$taskId': isTaskCompleted
+      'completionStatus.chapters.$chapterId': isChapterCompleted,
+      'completionStatus.tasks.$taskId': isTaskCompleted
     });
   }
 }

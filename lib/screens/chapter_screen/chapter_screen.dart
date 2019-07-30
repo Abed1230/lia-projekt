@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/chapter.dart';
+import 'package:karlekstanken/models/completion_status.dart';
 import 'package:karlekstanken/models/couple_data.dart';
-import 'package:karlekstanken/models/progress.dart';
 import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/screens/chapter_screen/widgets/task_list_item.dart';
 import 'package:karlekstanken/services/database.dart';
@@ -23,6 +23,11 @@ class _ChapterScreenState extends State<ChapterScreen> {
   Chapter _chapter;
   List<Task> _tasks;
 
+  DatabaseService _dbService;
+  User _user;
+  CoupleData _coupleData;
+  CompletionStatus _completionStatus;
+
   @override
   void initState() {
     super.initState();
@@ -32,12 +37,17 @@ class _ChapterScreenState extends State<ChapterScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    _dbService = Provider.of<DatabaseService>(context);
+    _user = Provider.of<User>(context);
+    _coupleData = Provider.of<CoupleData>(context);
+    _completionStatus = _coupleData?.completionStatus;
+
     _getTasks();
   }
 
   void _getTasks() async {
-    List<Task> tasks = await Provider.of<DatabaseService>(context)
-        .getTasks(_chapter.id, widget._licensed);
+    List<Task> tasks = await _dbService.getTasks(_chapter.id, widget._licensed);
     if (this.mounted) {
       setState(() {
         _tasks = tasks;
@@ -45,34 +55,44 @@ class _ChapterScreenState extends State<ChapterScreen> {
     }
   }
 
-  void onTaskTapped(Progress progress, Task task) {
-    if (progress == null) return;
+  void onTaskTapped(String taskId) {
+    if (_coupleData == null) return;
 
     // Reverse completion
-    bool isTaskCompleted = !progress.isTaskCompleted(task.id);
-
-    List<String> taskIds = _tasks.fold([], (res, t) {
-      if (t.id != task.id) {
-        res.add(t.id);
+    bool isTaskCompleted = !_isTaskCompleted(taskId, _completionStatus?.tasks);
+    // Add all tasksids except provided taskId to list
+    List<String> taskIds = _tasks.fold([], (result, task) {
+      if (task.id != taskId) {
+        result.add(task.id);
       }
-      return res;
+      return result;
     });
 
     bool isChapterCompleted =
-        isTaskCompleted && progress.isAllTasksCompleted(taskIds);
+        isTaskCompleted && _isTasksCompleted(taskIds, _completionStatus?.tasks);
 
-    Provider.of<DatabaseService>(context).updateChapterCompletionStatus(
-        Provider.of<User>(context).coupleDataRef,
-        _chapter.id,
-        isChapterCompleted,
-        task.id,
-        isTaskCompleted);
+    _dbService.updateChapterCompletionStatus(_user.coupleDataRef, _chapter.id,
+        isChapterCompleted, taskId, isTaskCompleted);
+  }
+
+  bool _isTaskCompleted(String id, Map<String, bool> tasks) {
+    if (tasks != null && tasks[id] != null)
+      return tasks[id];
+    else
+      return false;
+  }
+
+  bool _isTasksCompleted(List<String> taskIds, Map<String, bool> tasks) {
+    if (tasks == null) return false;
+    int count = 0;
+    for (String id in taskIds) {
+      if (tasks[id] != null && tasks[id]) count++;
+    }
+    return count == taskIds.length;
   }
 
   @override
   Widget build(BuildContext context) {
-    Progress progress = Provider.of<CoupleData>(context)?.progress;
-
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -103,10 +123,10 @@ class _ChapterScreenState extends State<ChapterScreen> {
                           itemBuilder: (context, pos) {
                             Task task = _tasks[pos];
                             return TaskListItem(
-                              completed:
-                                  progress?.isTaskCompleted(task.id) ?? false,
+                              completed: _isTaskCompleted(
+                                  task.id, _completionStatus?.tasks),
                               title: task.title,
-                              onTap: () => onTaskTapped(progress, task),
+                              onTap: () => onTaskTapped(task.id),
                             );
                           }),
                 ],

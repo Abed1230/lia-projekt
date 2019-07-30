@@ -1,13 +1,14 @@
-import 'package:karlekstanken/models/progress.dart';
+
+import 'package:karlekstanken/models/completion_status.dart';
 
 class CoupleData {
-  Progress progress;
+  CompletionStatus completionStatus;
 
-  CoupleData({this.progress});
+  CoupleData({this.completionStatus});
 
   factory CoupleData.fromMap(Map data) {
     if (data == null) return null;
 
-    return new CoupleData(progress: Progress.fromMap(data['progress']));
+    return new CoupleData(completionStatus: CompletionStatus.fromMap(data['completionStatus']));
   }
 }
