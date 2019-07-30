@@ -36,6 +36,7 @@ class DatabaseService {
   }
 
   Stream<User> streamUser(String uid) {
+    if (uid == null) return Stream<User>.empty();
     return _db
         .collection(USERS)
         .document(uid)

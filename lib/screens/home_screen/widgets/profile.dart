@@ -20,7 +20,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context);
     OtherUser partner =
-        user.partner != null ? OtherUser.fromMap(user.partner) : null;
+        user?.partner != null ? OtherUser.fromMap(user.partner) : null;
     return user != null
         ? SizedBox.expand(
             child: Column(
