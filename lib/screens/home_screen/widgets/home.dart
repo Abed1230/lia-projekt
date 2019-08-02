@@ -42,11 +42,12 @@ class _HomeState extends State<Home> {
         user != null
             ? FutureBuilder(
                 future: Provider.of<DatabaseService>(context)
-                    .getChapters(user.licensed ? true : false),
+                    .getChaptersWithTasks(user.licensed ? true : false),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) return SizedBox();
 
                   List<Chapter> chapters = snapshot.data;
+                  
                   return ListView.builder(
                     padding: EdgeInsets.only(top: 100.0),
                     itemBuilder: (context, position) {

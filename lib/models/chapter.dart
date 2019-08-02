@@ -8,6 +8,7 @@ class Chapter {
   final String audioUrl;
   final List<String> videoUrls;
   final bool isPreview;
+  List<Task> tasks;
 
   Chapter(
       {this.id,

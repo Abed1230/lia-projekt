@@ -3,7 +3,6 @@ import 'package:karlekstanken/models/chapter.dart';
 import 'package:karlekstanken/models/couple_data.dart';
 import 'package:karlekstanken/models/user.dart';
 
-// Todo use provider to provide this
 class DatabaseService {
   static const String CHAPTERS_FREE = 'chapters_free';
   static const String CHAPTERS_PAID = 'chapters_paid';
@@ -33,6 +32,24 @@ class DatabaseService {
     List<Task> tasks = docs.map((doc) => Task.fromFirestore(doc)).toList();
     tasks.sort((a, b) => a.title.compareTo(b.title));
     return tasks;
+  }
+
+  Future<List<Chapter>> getChaptersWithTasks(bool licensed) async {
+    QuerySnapshot query = await _db
+        .collection(licensed ? CHAPTERS_PAID : CHAPTERS_FREE)
+        .getDocuments();
+        
+    List<DocumentSnapshot> docs = query.documents;
+    List<Future<Chapter>> mappedList =
+        docs.map((doc) async {
+          Chapter chapter = Chapter.fromFirestore(doc);
+          chapter.tasks = await getTasks(chapter.id, licensed);
+          return chapter;
+          }).toList();
+    Future<List<Chapter>> futureList = Future.wait(mappedList);
+    List<Chapter> chapters = await futureList;
+    chapters.sort((a, b) => a.title.compareTo(b.title));
+    return chapters;
   }
 
   Stream<User> streamUser(String uid) {
