@@ -28,6 +28,7 @@ dependencies:
   auto_orientation: ^0.0.2
   audioplayers: ^0.13.0
   provider: ^3.0.0+1
+  liquid_progress_indicator: ^0.3.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
