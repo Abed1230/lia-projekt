@@ -31,51 +31,77 @@ class _HomeState extends State<Home> {
       return false;
   }
 
+  int _getTasksTotal(List<Chapter> chapters) {
+    int count = 0;
+    chapters.forEach((Chapter chapter) {
+      chapter.tasks?.forEach((_) => count++);
+    });
+    print('total tasks: $count');
+    return count;
+  }
+
+  int _getCompletedTasksTotal(Map<String, bool> tasks) {
+    if (tasks == null) return 0;
+
+    int count = 0;
+    tasks.forEach((id, completed) {
+      if (completed) count++;
+    });
+    print('completed tasks: $count');
+    return count;
+  }
+
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context);
     CompletionStatus completionStatus =
         Provider.of<CoupleData>(context)?.completionStatus;
 
-    return Stack(
-      children: <Widget>[
-        user != null
-            ? FutureBuilder(
-                future: Provider.of<DatabaseService>(context)
-                    .getChaptersWithTasks(user.licensed ? true : false),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) return SizedBox();
+    bool showProgressIndicator = user?.partner != null;
 
-                  List<Chapter> chapters = snapshot.data;
-                  
-                  return ListView.builder(
-                    padding: EdgeInsets.only(top: 100.0),
-                    itemBuilder: (context, position) {
-                      Chapter chapter = chapters[position];
-                      return ChapterListItem(
-                        completed: _isChapterCompleted(
-                            chapter.id, completionStatus?.chapters),
-                        disabled: chapter.isPreview,
-                        title: chapter.title,
-                        description: chapter.previewText,
-                        onTap: () {
-                          if (!chapter.isPreview) {
-                            _navigateToChapterScreen(chapter, user.licensed);
-                          }
-                        },
-                      );
-                    },
-                    itemCount: chapters.length,
-                  );
-                },
-              )
-            : SizedBox(),
-        Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-                padding: EdgeInsets.only(top: 16),
-                child: MyProgressIndicator()))
-      ],
-    );
+    return user != null
+        ? FutureBuilder(
+            future: Provider.of<DatabaseService>(context)
+                .getChaptersWithTasks(user.licensed ? true : false),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return SizedBox();
+
+              List<Chapter> chapters = snapshot.data;
+
+              return Stack(children: <Widget>[
+                ListView.builder(
+                  padding:
+                      EdgeInsets.only(top: showProgressIndicator ? 100.0 : 0.0),
+                  itemBuilder: (context, position) {
+                    Chapter chapter = chapters[position];
+                    return ChapterListItem(
+                      completed: _isChapterCompleted(
+                          chapter.id, completionStatus?.chapters),
+                      disabled: chapter.isPreview,
+                      title: chapter.title,
+                      description: chapter.previewText,
+                      onTap: () {
+                        if (!chapter.isPreview) {
+                          _navigateToChapterScreen(chapter, user.licensed);
+                        }
+                      },
+                    );
+                  },
+                  itemCount: chapters.length,
+                ),
+                Visibility(
+                    visible: showProgressIndicator,
+                    child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 16),
+                            child: MyProgressIndicator(
+                                _getTasksTotal(chapters),
+                                _getCompletedTasksTotal(
+                                    completionStatus?.tasks)))))
+              ]);
+            },
+          )
+        : SizedBox();
   }
 }
