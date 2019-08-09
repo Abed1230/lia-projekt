@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/query.dart';
 import 'package:karlekstanken/models/statement.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/query_page.dart';
+import 'package:karlekstanken/screens/test_screen/widgets/start_page.dart';
 import 'package:provider/provider.dart';
 
 class TestState extends ChangeNotifier {
@@ -70,19 +71,13 @@ class _TestScreenState extends State<TestScreen> {
                   //TODO: update progress value
                 },
                 itemBuilder: (BuildContext context, int position) {
-                  if (position == _queries.length) {
+                  if (position == 0) {
+                    return StartPage();
+                  } else if(position == _queries.length + 1) {
                     return Center(child: Text('Done!'));
                   } else {
-                    return QueryPage(_queries[position]);
+                     return QueryPage(_queries[position - 1]);
                   }
-                  
-                  /* if (position == 0) {
-                    // return start page
-                  } else if(position == _queries.length + 1) {
-                    // return finished page
-                  } else {
-                     return QueryPage(_queries[position]);
-                  } */
                 },
               ),
             );

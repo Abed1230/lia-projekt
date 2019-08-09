@@ -1,6 +1,11 @@
 class MyStrings {
   static const appName = 'Kärlekstanken';
 
+  // Test screen
+  static const testTitle = 'Kärleksspråktestet';
+  static const testDescription = 'Ta reda på vilket kärleksspråk du har genom att välja de påståenden som bäst stämmer in på dig';
+  static const start = 'Starta';
+  
   // Unauthenticated screen
   static const notSignedInMsg = 'Du är inte inloggad och därmed begränsad till introduktionen';
 
