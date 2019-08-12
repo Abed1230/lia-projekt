@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/query.dart';
 import 'package:karlekstanken/models/statement.dart';
+import 'package:karlekstanken/screens/test_screen/widgets/finish_page.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/query_page.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/start_page.dart';
 import 'package:provider/provider.dart';
@@ -12,14 +13,9 @@ class TestState extends ChangeNotifier {
 
   List<Statement> get selected => _selected;
 
-  /* set selected(Statement newValue) {
-    _selected = newValue;
-    notifyListeners();
-  }    */
-
   void nextPage() async {
     await _controller.nextPage(
-        duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+        duration: Duration(milliseconds: 400), curve: Curves.easeOut);
   }
 }
 
@@ -74,7 +70,7 @@ class _TestScreenState extends State<TestScreen> {
                   if (position == 0) {
                     return StartPage();
                   } else if(position == _queries.length + 1) {
-                    return Center(child: Text('Done!'));
+                    return FinishPage();
                   } else {
                      return QueryPage(_queries[position - 1]);
                   }
