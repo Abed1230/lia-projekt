@@ -34,8 +34,8 @@ class _TestScreenState extends State<TestScreen> {
     super.initState();
 
     List<Statement> statements = [
-      Statement('A','hello', 'A'),
-      Statement('B', 'Bye', 'B')
+      Statement('1','hello', 'A'),
+      Statement('2', 'Bye', 'B')
     ];
     List<Statement> statements2 = [
       Statement('A', 'muhaha', 'A'),
