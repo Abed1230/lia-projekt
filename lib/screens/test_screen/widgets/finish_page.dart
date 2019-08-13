@@ -13,7 +13,7 @@ class FinishPage extends StatefulWidget {
 class _FinishPageState extends State<FinishPage> {
   int _selected = -1;
 
-  List<String> calculateLoveLanguage(List<Statement> selectedStatements) {
+  List<String> _calculateLoveLanguage(List<Statement> selectedStatements) {
     Map<String, int> lettersCount = selectedStatements
         .fold({'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0}, (result, statement) {
       String letter = statement.value;
@@ -52,11 +52,16 @@ class _FinishPageState extends State<FinishPage> {
     return loveLanguages;
   }
 
+  void _saveAndQuit() {
+    // TODO: Save to db
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<TestState>(context);
 
-    List<String> loveLanguages = calculateLoveLanguage(state.selected);
+    List<String> loveLanguages = _calculateLoveLanguage(state.selected);
     print(loveLanguages.length);
     bool hasMultipleLoveLanguages = loveLanguages.length > 1;
 
@@ -70,7 +75,7 @@ class _FinishPageState extends State<FinishPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text(MyStrings.finishPageTitle2,
+                        Text(MyStrings.finishPageTitle,
                             style: TextStyle(fontSize: 18)),
                         SizedBox(
                           height: 16,
@@ -101,12 +106,8 @@ class _FinishPageState extends State<FinishPage> {
                           height: 16,
                         ),
                         RaisedButton(
-                          child: Text(MyStrings.saveAndQuit),
-                          onPressed: _selected < 0 ? null : () {
-                            // TODO: Save to db 
-                            Navigator.of(context).pop();
-                          },
-                        ),
+                            child: Text(MyStrings.saveAndQuit),
+                            onPressed: _selected < 0 ? null : _saveAndQuit),
                       ],
                     ))))
         : Padding(
@@ -114,8 +115,7 @@ class _FinishPageState extends State<FinishPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(MyStrings.finishPageTitle1,
-                    style: TextStyle(fontSize: 18)),
+                Text(MyStrings.finishPageTitle, style: TextStyle(fontSize: 18)),
                 SizedBox(
                   height: 16,
                 ),
@@ -123,17 +123,15 @@ class _FinishPageState extends State<FinishPage> {
                   loveLanguages[0],
                   style: TextStyle(fontSize: 16.0),
                 ),
-                Text('description', style: TextStyle(color: Colors.grey),),
+                Text(
+                  'description',
+                  style: TextStyle(color: Colors.grey),
+                ),
                 SizedBox(
                   height: 16,
                 ),
                 RaisedButton(
-                  child: Text(MyStrings.quit),
-                  onPressed: () {
-                    // TODO: Save to db
-                    Navigator.of(context).pop();
-                  },
-                ),
+                    child: Text(MyStrings.quit), onPressed: _saveAndQuit),
               ],
             ));
   }

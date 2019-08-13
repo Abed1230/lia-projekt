@@ -9,12 +9,17 @@ import 'package:provider/provider.dart';
 class TestState extends ChangeNotifier {
   final PageController _controller = new PageController();
 
-  List<Statement> _selected = []; 
+  List<Statement> _selected = [];
 
   List<Statement> get selected => _selected;
 
   void nextPage() async {
     await _controller.nextPage(
+        duration: Duration(milliseconds: 400), curve: Curves.easeOut);
+  }
+
+  void previousPage() async {
+    await _controller.previousPage(
         duration: Duration(milliseconds: 400), curve: Curves.easeOut);
   }
 }
@@ -26,7 +31,6 @@ class TestScreen extends StatefulWidget {
 }
 
 class _TestScreenState extends State<TestScreen> {
-
   List<Query> _queries;
 
   @override
@@ -34,14 +38,24 @@ class _TestScreenState extends State<TestScreen> {
     super.initState();
 
     List<Statement> statements = [
-      Statement('1','hello', 'A'),
+      Statement('1', 'hello', 'A'),
       Statement('2', 'Bye', 'B')
     ];
     List<Statement> statements2 = [
       Statement('A', 'muhaha', 'A'),
       Statement('B', 'asd', 'B')
     ];
-    _queries = [Query('', statements), Query('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce facilisis leo arcu, id semper lorem congue ac. ', statements2)];
+    List<Statement> statements3 = [
+      Statement('A', 'aw', 'D'),
+      Statement('B', 'na', 'C')
+    ];
+    _queries = [
+      Query('', statements),
+      Query(
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce facilisis leo arcu, id semper lorem congue ac. ',
+          statements2),
+      Query('', statements3),
+    ];
   }
 
   @override
@@ -69,10 +83,25 @@ class _TestScreenState extends State<TestScreen> {
                 itemBuilder: (BuildContext context, int position) {
                   if (position == 0) {
                     return StartPage();
-                  } else if(position == _queries.length + 1) {
+                  } else if (position == _queries.length + 1) {
                     return FinishPage();
                   } else {
-                     return QueryPage(_queries[position - 1]);
+                    return Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: QueryPage(_queries[position - 1]),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(16),
+                          alignment: Alignment.centerLeft,
+                          child: FlatButton.icon(
+                            icon: Icon(Icons.keyboard_arrow_left),
+                            label: Text('Föregående'),
+                            onPressed: state.previousPage,
+                          ),
+                        )
+                      ],
+                    );
                   }
                 },
               ),

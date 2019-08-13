@@ -5,8 +5,7 @@ class MyStrings {
   static const testTitle = 'Kärleksspråktestet';
   static const testDescription = 'Ta reda på vilket kärleksspråk du har genom att välja de påståenden som bäst stämmer in på dig';
   static const start = 'Starta';
-  static const finishPageTitle1 = 'Ditt kärlekspråk är:';
-  static const finishPageTitle2 = 'Ditt kärlekspråk är ett av följande:';
+  static const finishPageTitle = 'Ditt kärlekspråk är:';
   static const chooseLoveLanguageMsg = 'Välj det kärleksspråk som du känner stämmer mest in på dig';
   static const saveAndQuit = 'Spara och avsluta';
   static const quit = 'Avsluta';
