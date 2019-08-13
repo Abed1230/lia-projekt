@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/query.dart';
 import 'package:karlekstanken/models/statement.dart';
+import 'package:karlekstanken/screens/test_screen/widgets/animated_progress_bar.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/finish_page.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/query_page.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/start_page.dart';
 import 'package:provider/provider.dart';
 
+// Shared state
 class TestState extends ChangeNotifier {
   final PageController _controller = new PageController();
 
@@ -24,13 +26,14 @@ class TestState extends ChangeNotifier {
   }
 }
 
-// TODO: Convert to statless
 class TestScreen extends StatefulWidget {
   @override
   _TestScreenState createState() => _TestScreenState();
 }
 
 class _TestScreenState extends State<TestScreen> {
+  int _pageIndex = 0;
+  double _progress = 0;
   List<Query> _queries;
 
   @override
@@ -67,7 +70,20 @@ class _TestScreenState extends State<TestScreen> {
             TestState state = Provider.of<TestState>(context);
             return Scaffold(
               appBar: AppBar(
-                title: Text('Progressbar here'),
+                title: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: AnimatedProgressbar(
+                        height: 10,
+                        value: _progress,
+                      ),
+                    ),
+                    Text(
+                      '$_pageIndex / ${_queries.length + 1}',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
                 leading: IconButton(
                   icon: Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
@@ -77,8 +93,13 @@ class _TestScreenState extends State<TestScreen> {
                 physics: NeverScrollableScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 controller: state._controller,
-                onPageChanged: (int position) {
-                  //TODO: update progress value
+                onPageChanged: (int pos) {
+                  setState(() {
+                    _pageIndex = pos;
+                    _progress = pos / (_queries.length + 1);
+                    /*  _pageIndex = pos - 1;
+                    _progress = ((pos  - 1) / (_queries.length)); */
+                  });
                 },
                 itemBuilder: (BuildContext context, int position) {
                   if (position == 0) {
