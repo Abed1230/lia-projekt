@@ -19,13 +19,16 @@ class QueryPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: _query.statements.map((statement) {
           bool selected = state.selected.contains(statement);
-          // neccessary for when navigating back to the this query
-          state.selected.remove(statement);
 
           return Container(
               margin: EdgeInsets.only(bottom: 16.0),
               child: InkWell(
                 onTap: () {
+                  // remove previously selected
+                  _query.statements.forEach((st) {
+                    state.selected.remove(st);
+                  });
+
                   state.selected.add(statement);
                   state.nextPage();
                 },
