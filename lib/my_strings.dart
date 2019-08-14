@@ -9,6 +9,7 @@ class MyStrings {
   static const chooseLoveLanguageMsg = 'Välj det kärleksspråk som du känner stämmer mest in på dig';
   static const saveAndQuit = 'Spara och avsluta';
   static const quit = 'Avsluta';
+  static const previous = 'Föregående';
   
   // Unauthenticated screen
   static const notSignedInMsg = 'Du är inte inloggad och därmed begränsad till introduktionen';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/query.dart';
 import 'package:karlekstanken/models/statement.dart';
+import 'package:karlekstanken/my_strings.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/animated_progress_bar.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/finish_page.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/query_page.dart';
@@ -79,7 +80,7 @@ class _TestScreenState extends State<TestScreen> {
                       ),
                     ),
                     Text(
-                      '$_pageIndex / ${_queries.length + 1}',
+                      '$_pageIndex / ${_queries.length}',
                       style: TextStyle(fontSize: 14),
                     ),
                   ],
@@ -95,10 +96,10 @@ class _TestScreenState extends State<TestScreen> {
                 controller: state._controller,
                 onPageChanged: (int pos) {
                   setState(() {
-                    _pageIndex = pos;
-                    _progress = pos / (_queries.length + 1);
-                    /*  _pageIndex = pos - 1;
-                    _progress = ((pos  - 1) / (_queries.length)); */
+                    /*  _pageIndex = pos;
+                    _progress = pos / (_queries.length + 1); */
+                    _pageIndex = pos - 1;
+                    _progress = ((pos - 1) / (_queries.length));
                   });
                 },
                 itemBuilder: (BuildContext context, int position) {
@@ -117,7 +118,7 @@ class _TestScreenState extends State<TestScreen> {
                           alignment: Alignment.centerLeft,
                           child: FlatButton.icon(
                             icon: Icon(Icons.keyboard_arrow_left),
-                            label: Text('Föregående'),
+                            label: Text(MyStrings.previous),
                             onPressed: state.previousPage,
                           ),
                         )
