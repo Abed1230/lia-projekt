@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:karlekstanken/models/love_language.dart';
 import 'package:karlekstanken/models/query.dart';
 import 'package:karlekstanken/my_strings.dart';
+import 'package:karlekstanken/services/database.dart';
 import 'package:provider/provider.dart';
 
 import '../test_screen.dart';
@@ -14,7 +16,6 @@ class _FinishPageState extends State<FinishPage> {
   int _selected = -1;
 
   List<String> _calculateLoveLanguage(List<Statement> selectedStatements) {
-    print('selected: ${selectedStatements.length}');
     Map<String, int> lettersCount = selectedStatements
         .fold({'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0}, (result, statement) {
       String letter = statement.value;
@@ -60,80 +61,97 @@ class _FinishPageState extends State<FinishPage> {
 
   @override
   Widget build(BuildContext context) {
+    var dbService = Provider.of<DatabaseService>(context);
     var state = Provider.of<TestState>(context);
 
-    List<String> loveLanguages = _calculateLoveLanguage(state.selected);
-    print(loveLanguages.length);
-    bool hasMultipleLoveLanguages = loveLanguages.length > 1;
+    List<String> loveLanguageIds = _calculateLoveLanguage(state.selected);
+    bool hasMultipleLoveLanguages = loveLanguageIds.length > 1;
 
-    // TODO: get love language info from db
+    return FutureBuilder(
+      future: dbService.getLoveLanguages(loveLanguageIds),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.hasError) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-    return hasMultipleLoveLanguages
-        ? Center(
-            child: SingleChildScrollView(
-                child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(MyStrings.finishPageTitle,
-                            style: TextStyle(fontSize: 18)),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: loveLanguages.length,
-                          itemBuilder: (context, position) {
-                            return RadioListTile(
-                              title: Text(loveLanguages[position]),
-                              subtitle: Text('Description'),
-                              value: position,
-                              groupValue: _selected,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selected = value;
-                                });
+        List<LoveLanguage> loveLanguages = snapshot.data;
+
+        return hasMultipleLoveLanguages
+            ? Center(
+                child: SingleChildScrollView(
+                    child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(MyStrings.finishPageTitle,
+                                style: TextStyle(fontSize: 18)),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: loveLanguages.length,
+                              itemBuilder: (context, position) {
+                                return RadioListTile(
+                                  title: Text(
+                                      '${loveLanguages[position].title} (${loveLanguages[position].id})'),
+                                  subtitle:
+                                      Text(loveLanguages[position].description),
+                                  value: position,
+                                  groupValue: _selected,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selected = value;
+                                    });
+                                  },
+                                );
                               },
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Text(MyStrings.chooseLoveLanguageMsg),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        RaisedButton(
-                            child: Text(MyStrings.saveAndQuit),
-                            onPressed: _selected < 0 ? null : _saveAndQuit),
-                      ],
-                    ))))
-        : Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(MyStrings.finishPageTitle, style: TextStyle(fontSize: 18)),
-                SizedBox(
-                  height: 16,
-                ),
-                Text(
-                  loveLanguages[0],
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                Text(
-                  'description',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                RaisedButton(
-                    child: Text(MyStrings.quit), onPressed: _saveAndQuit),
-              ],
-            ));
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Text(MyStrings.chooseLoveLanguageMsg),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            RaisedButton(
+                                child: Text(MyStrings.saveAndQuit),
+                                onPressed: _selected < 0 ? null : _saveAndQuit),
+                          ],
+                        ))))
+            : Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(MyStrings.finishPageTitle,
+                        style: TextStyle(fontSize: 18)),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      '${loveLanguages[0].title} (${loveLanguages[0].id})',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                      loveLanguages[0].description,
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    RaisedButton(
+                        child: Text(MyStrings.quit), onPressed: _saveAndQuit),
+                  ],
+                ));
+      },
+    );
   }
 }

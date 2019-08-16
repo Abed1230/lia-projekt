@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:karlekstanken/models/chapter.dart';
 import 'package:karlekstanken/models/couple_data.dart';
+import 'package:karlekstanken/models/love_language.dart';
 import 'package:karlekstanken/models/query.dart' as my;
 import 'package:karlekstanken/models/user.dart';
 
@@ -10,6 +11,7 @@ class DatabaseService {
   static const String TASKS = 'tasks';
   static const String USERS = 'users';
   static const String LOVE_LANGUAGE_TEST_QUERIES = 'loveLanguageTestQueries';
+  static const String LOVE_LANGUAGES = 'loveLanguages';
 
   final Firestore _db = Firestore.instance;
 
@@ -89,5 +91,16 @@ class DatabaseService {
     List<my.Query> queries =
         docs.map((doc) => my.Query.fromMap(doc.data)).toList();
     return queries;
+  }
+
+  Future<List<LoveLanguage>> getLoveLanguages(List<String> ids) async {
+    List<DocumentSnapshot> docs = [];
+    for (String id in ids) {
+      docs.add(await _db.collection(LOVE_LANGUAGES).document(id).get());
+    }
+    List<LoveLanguage> langs =
+        docs.map((doc) => LoveLanguage.fromFirestore(doc)).toList();
+    langs.sort((a, b) => a.id.compareTo(b.id));
+    return langs;
   }
 }
