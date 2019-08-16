@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:karlekstanken/models/statement.dart';
+import 'package:karlekstanken/models/query.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +14,7 @@ class _FinishPageState extends State<FinishPage> {
   int _selected = -1;
 
   List<String> _calculateLoveLanguage(List<Statement> selectedStatements) {
+    print('selected: ${selectedStatements.length}');
     Map<String, int> lettersCount = selectedStatements
         .fold({'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0}, (result, statement) {
       String letter = statement.value;

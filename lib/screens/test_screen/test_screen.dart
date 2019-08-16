@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/query.dart';
-import 'package:karlekstanken/models/statement.dart';
 import 'package:karlekstanken/my_strings.dart';
+import 'package:karlekstanken/screens/loading_screen/loading_screen.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/animated_progress_bar.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/finish_page.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/query_page.dart';
 import 'package:karlekstanken/screens/test_screen/widgets/start_page.dart';
+import 'package:karlekstanken/services/database.dart';
 import 'package:provider/provider.dart';
 
 // Shared state
@@ -35,40 +36,23 @@ class TestScreen extends StatefulWidget {
 class _TestScreenState extends State<TestScreen> {
   int _pageIndex = 0;
   double _progress = 0;
-  List<Query> _queries;
-
-  @override
-  void initState() {
-    super.initState();
-
-    List<Statement> statements = [
-      Statement('1', 'hello', 'A'),
-      Statement('2', 'Bye', 'B')
-    ];
-    List<Statement> statements2 = [
-      Statement('A', 'muhaha', 'A'),
-      Statement('B', 'asd', 'B')
-    ];
-    List<Statement> statements3 = [
-      Statement('A', 'aw', 'D'),
-      Statement('B', 'na', 'C')
-    ];
-    _queries = [
-      Query('', statements),
-      Query(
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce facilisis leo arcu, id semper lorem congue ac. ',
-          statements2),
-      Query('', statements3),
-    ];
-  }
 
   @override
   Widget build(BuildContext context) {
+    DatabaseService dbService = Provider.of<DatabaseService>(context);
+
     return ChangeNotifierProvider(
         builder: (_) => new TestState(),
-        child: Builder(
-          builder: (BuildContext context) {
+        child: FutureBuilder(
+          future: dbService.getTestQueries(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData || snapshot.hasError) {
+              return LoadingScreen();
+            }
+
             TestState state = Provider.of<TestState>(context);
+
+            List<Query> queries = snapshot.data;
             return Scaffold(
               appBar: AppBar(
                 title: Row(
@@ -80,7 +64,7 @@ class _TestScreenState extends State<TestScreen> {
                       ),
                     ),
                     Text(
-                      '$_pageIndex / ${_queries.length}',
+                      '$_pageIndex / ${queries.length}',
                       style: TextStyle(fontSize: 14),
                     ),
                   ],
@@ -97,21 +81,21 @@ class _TestScreenState extends State<TestScreen> {
                 onPageChanged: (int pos) {
                   setState(() {
                     /*  _pageIndex = pos;
-                    _progress = pos / (_queries.length + 1); */
+                    _progress = pos / (queries.length + 1); */
                     _pageIndex = pos - 1;
-                    _progress = ((pos - 1) / (_queries.length));
+                    _progress = ((pos - 1) / (queries.length));
                   });
                 },
                 itemBuilder: (BuildContext context, int position) {
                   if (position == 0) {
                     return StartPage();
-                  } else if (position == _queries.length + 1) {
+                  } else if (position == queries.length + 1) {
                     return FinishPage();
                   } else {
                     return Column(
                       children: <Widget>[
                         Expanded(
-                          child: QueryPage(_queries[position - 1]),
+                          child: QueryPage(queries[position - 1]),
                         ),
                         Container(
                           padding: EdgeInsets.all(16),

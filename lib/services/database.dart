@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:karlekstanken/models/chapter.dart';
 import 'package:karlekstanken/models/couple_data.dart';
+import 'package:karlekstanken/models/query.dart' as my;
 import 'package:karlekstanken/models/user.dart';
 
 class DatabaseService {
@@ -8,6 +9,7 @@ class DatabaseService {
   static const String CHAPTERS_PAID = 'chapters_paid';
   static const String TASKS = 'tasks';
   static const String USERS = 'users';
+  static const String LOVE_LANGUAGE_TEST_QUERIES = 'loveLanguageTestQueries';
 
   final Firestore _db = Firestore.instance;
 
@@ -38,14 +40,13 @@ class DatabaseService {
     QuerySnapshot query = await _db
         .collection(licensed ? CHAPTERS_PAID : CHAPTERS_FREE)
         .getDocuments();
-        
+
     List<DocumentSnapshot> docs = query.documents;
-    List<Future<Chapter>> mappedList =
-        docs.map((doc) async {
-          Chapter chapter = Chapter.fromFirestore(doc);
-          chapter.tasks = await getTasks(chapter.id, licensed);
-          return chapter;
-          }).toList();
+    List<Future<Chapter>> mappedList = docs.map((doc) async {
+      Chapter chapter = Chapter.fromFirestore(doc);
+      chapter.tasks = await getTasks(chapter.id, licensed);
+      return chapter;
+    }).toList();
     Future<List<Chapter>> futureList = Future.wait(mappedList);
     List<Chapter> chapters = await futureList;
     chapters.sort((a, b) => a.title.compareTo(b.title));
@@ -77,5 +78,16 @@ class DatabaseService {
       'completionStatus.chapters.$chapterId': isChapterCompleted,
       'completionStatus.tasks.$taskId': isTaskCompleted
     });
+  }
+
+  Future<List<my.Query>> getTestQueries() async {
+    QuerySnapshot snapshot = await _db
+        .collection(LOVE_LANGUAGE_TEST_QUERIES)
+        .orderBy('position')
+        .getDocuments();
+    List<DocumentSnapshot> docs = snapshot.documents;
+    List<my.Query> queries =
+        docs.map((doc) => my.Query.fromMap(doc.data)).toList();
+    return queries;
   }
 }
