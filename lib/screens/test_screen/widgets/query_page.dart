@@ -24,18 +24,12 @@ class QueryPage extends StatelessWidget {
               margin: EdgeInsets.only(bottom: 16.0),
               child: InkWell(
                 onTap: () {
-                  print('before remove: ${state.selected.toString()}');
                   // remove previously selected
                   _query.statements.forEach((st) {
-                    bool removed = state.selected.remove(st);
-                    bool contains = state.selected.contains(st);
-                    print('removed: $removed contains: $contains');
-
+                    state.selected.remove(st);
                   });
-                  print('after remove: ${state.selected.toString()}');
 
                   state.selected.add(statement);
-                  print('after add: ${state.selected.toString()}');
                   state.nextPage();
                 },
                 child: Padding(
