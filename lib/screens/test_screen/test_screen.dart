@@ -92,7 +92,7 @@ class _TestScreenState extends State<TestScreen> {
                         setState(() {
                           /*  _pageIndex = pos;
                     _progress = pos / (_queries.length + 1); */
-                          _pageIndex = pos - 1;
+                          _pageIndex = (pos - 1) < 0 ? 0 : (pos - 1);
                           _progress = ((pos - 1) / (_queries.length));
                         });
                       },
