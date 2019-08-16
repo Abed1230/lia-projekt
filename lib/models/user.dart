@@ -4,6 +4,7 @@ class User {
   final String uid;
   final String name;
   final String email;
+  final String loveLanguage;
   final Map partner;
   final bool licensed;
   final Map partnerRequestFrom;
@@ -14,17 +15,21 @@ class User {
       {this.uid,
       this.name,
       this.email,
+      this.loveLanguage,
       this.partner,
       this.licensed,
       this.partnerRequestFrom,
       this.partnerRequestTo,
       this.coupleDataRef});
 
-  factory User.fromMap(Map data) {
+  factory User.fromFirestore(DocumentSnapshot doc) {
+    Map data = doc.data;
+
     return User(
-        uid: data['uid'] ?? '',
+        uid: doc.documentID,
         name: data['name'] ?? '',
         email: data['email'] ?? '',
+        loveLanguage: data['loveLanguage'] ?? '',
         partner: data['partner'],
         licensed: data['licensed'],
         partnerRequestFrom: data['partnerRequestFrom'],

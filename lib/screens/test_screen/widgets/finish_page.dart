@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/love_language.dart';
 import 'package:karlekstanken/models/query.dart';
+import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:karlekstanken/services/database.dart';
 import 'package:provider/provider.dart';
@@ -54,8 +56,13 @@ class _FinishPageState extends State<FinishPage> {
     return loveLanguages;
   }
 
-  void _saveAndQuit() {
-    // TODO: Save to db
+  void _saveAndQuit(String loveLanguage) {
+    User user = Provider.of<User>(context);
+    Provider.of<DatabaseService>(context).saveLoveLangauge(
+        loveLanguage: loveLanguage,
+        uid: user.uid,
+        coupleDataRef: user.coupleDataRef);
+
     Navigator.of(context).pop();
   }
 
@@ -120,7 +127,10 @@ class _FinishPageState extends State<FinishPage> {
                             ),
                             RaisedButton(
                                 child: Text(MyStrings.saveAndQuit),
-                                onPressed: _selected < 0 ? null : _saveAndQuit),
+                                onPressed: _selected < 0
+                                    ? null
+                                    : () => _saveAndQuit(
+                                        loveLanguages[_selected].id)),
                           ],
                         ))))
             : Padding(
@@ -148,7 +158,8 @@ class _FinishPageState extends State<FinishPage> {
                       height: 16,
                     ),
                     RaisedButton(
-                        child: Text(MyStrings.quit), onPressed: _saveAndQuit),
+                        child: Text(MyStrings.quit),
+                        onPressed: () => _saveAndQuit(loveLanguages[0].id)),
                   ],
                 ));
       },

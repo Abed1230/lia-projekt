@@ -61,7 +61,7 @@ class DatabaseService {
         .collection(USERS)
         .document(uid)
         .snapshots()
-        .map((snap) => User.fromMap(snap.data));
+        .map((snap) => User.fromFirestore(snap));
   }
 
   Stream<CoupleData> streamCoupleData(DocumentReference ref) {
@@ -102,5 +102,14 @@ class DatabaseService {
         docs.map((doc) => LoveLanguage.fromFirestore(doc)).toList();
     langs.sort((a, b) => a.id.compareTo(b.id));
     return langs;
+  }
+
+  void saveLoveLangauge(
+      {String loveLanguage, String uid, DocumentReference coupleDataRef}) {
+    _db
+        .collection(USERS)
+        .document(uid)
+        .updateData({'loveLanguage': loveLanguage});
+    coupleDataRef.updateData({'loveLanguages.$uid': loveLanguage});
   }
 }
