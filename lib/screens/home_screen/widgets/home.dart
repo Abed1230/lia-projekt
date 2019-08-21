@@ -4,6 +4,7 @@ import 'package:karlekstanken/models/completion_status.dart';
 import 'package:karlekstanken/models/couple_data.dart';
 import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/screens/chapter_screen/chapter_screen.dart';
+import 'package:karlekstanken/screens/home_screen/widgets/do_test.dart';
 import 'package:karlekstanken/screens/home_screen/widgets/my_progress_indicator.dart';
 import 'package:karlekstanken/services/database.dart';
 import 'package:karlekstanken/widgets/chapter_list_item.dart';
@@ -58,6 +59,7 @@ class _HomeState extends State<Home> {
         Provider.of<CoupleData>(context)?.completionStatus;
 
     bool showProgressIndicator = user?.partner != null;
+    bool showDoTestButton = true; //user?.licensed;
 
     return user != null
         ? FutureBuilder(
@@ -69,26 +71,29 @@ class _HomeState extends State<Home> {
               List<Chapter> chapters = snapshot.data;
 
               return Stack(children: <Widget>[
-                ListView.builder(
-                  padding:
-                      EdgeInsets.only(top: showProgressIndicator ? 100.0 : 0.0),
-                  itemBuilder: (context, position) {
-                    Chapter chapter = chapters[position];
-                    return ChapterListItem(
-                      completed: _isChapterCompleted(
-                          chapter.id, completionStatus?.chapters),
-                      disabled: chapter.isPreview,
-                      title: chapter.title,
-                      description: chapter.previewText,
-                      onTap: () {
-                        if (!chapter.isPreview) {
-                          _navigateToChapterScreen(chapter, user.licensed);
-                        }
+                Container(
+                    margin: EdgeInsets.only(bottom: showDoTestButton ? 50 : 0),
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(
+                        top: showProgressIndicator ? 110 : 0,
+                      ), //bottom: showDoTestButton ? 60 : 0),
+                      itemBuilder: (context, position) {
+                        Chapter chapter = chapters[position];
+                        return ChapterListItem(
+                          completed: _isChapterCompleted(
+                              chapter.id, completionStatus?.chapters),
+                          disabled: chapter.isPreview,
+                          title: chapter.title,
+                          description: chapter.previewText,
+                          onTap: () {
+                            if (!chapter.isPreview) {
+                              _navigateToChapterScreen(chapter, user.licensed);
+                            }
+                          },
+                        );
                       },
-                    );
-                  },
-                  itemCount: chapters.length,
-                ),
+                      itemCount: chapters.length,
+                    )),
                 Visibility(
                     visible: showProgressIndicator,
                     child: Align(
@@ -98,7 +103,17 @@ class _HomeState extends State<Home> {
                             child: MyProgressIndicator(
                                 _getTasksTotal(chapters),
                                 _getCompletedTasksTotal(
-                                    completionStatus?.tasks)))))
+                                    completionStatus?.tasks))))),
+                Visibility(
+                    visible: showDoTestButton,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: const DoTest(),
+                      /* Container(
+                        margin: EdgeInsets.only(bottom: 8),
+                        child:
+                            DoTestButton()), */
+                    ))
               ]);
             },
           )

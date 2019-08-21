@@ -3,7 +3,6 @@ import 'package:karlekstanken/models/other_user.dart';
 import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:karlekstanken/screens/pairing_screen/pairing_screen.dart';
-import 'package:karlekstanken/screens/test_screen/test_screen.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -47,11 +46,6 @@ class _ProfileState extends State<Profile> {
                       onPressed: _navigateToPairingScreen,
                     )
                   : SizedBox(),
-              RaisedButton(
-                child: Text('Test'),
-                onPressed: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => TestScreen())),
-              )
             ],
           ))
         : SizedBox();

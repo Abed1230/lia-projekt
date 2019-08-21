@@ -31,6 +31,9 @@ class MyStrings {
   static const home = 'Hem';
   static const profile = 'Profil';
 
+  // Profile screen
+  static const doTheLoveLanguageTest = 'Gör språktestet';
+
   // Pairing Screen
   static const pairingScreenTitle = 'Lägg till partner';
   static const inputPartnerEmail = 'Ange din partners e-mail address';
