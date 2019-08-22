@@ -33,6 +33,8 @@ class MyStrings {
 
   // Profile screen
   static const doTheLoveLanguageTest = 'Gör språktestet';
+  static const showDescription = 'Visa beskrivning';
+  static const loveLanguage = 'kärleksspråk';
 
   // Pairing Screen
   static const pairingScreenTitle = 'Lägg till partner';
