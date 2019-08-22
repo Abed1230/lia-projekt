@@ -29,7 +29,7 @@ class User {
         uid: doc.documentID,
         name: data['name'] ?? '',
         email: data['email'] ?? '',
-        loveLanguage: data['loveLanguage'] ?? '',
+        loveLanguage: data['loveLanguage'],
         partner: data['partner'],
         licensed: data['licensed'],
         partnerRequestFrom: data['partnerRequestFrom'],
