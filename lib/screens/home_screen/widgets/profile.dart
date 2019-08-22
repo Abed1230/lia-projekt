@@ -94,7 +94,7 @@ class _ProfileState extends State<Profile> {
             child: Padding(
                 padding: EdgeInsets.all(8),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Padding(
                         padding: EdgeInsets.only(top: 32, bottom: 10),
