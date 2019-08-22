@@ -35,6 +35,7 @@ class MyStrings {
   static const doTheLoveLanguageTest = 'Gör språktestet';
   static const showDescription = 'Visa beskrivning';
   static const loveLanguage = 'kärleksspråk';
+  static const yourLoveLanguage = 'Ditt kärleksspråk';
 
   // Pairing Screen
   static const pairingScreenTitle = 'Lägg till partner';

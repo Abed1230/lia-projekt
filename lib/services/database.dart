@@ -104,6 +104,13 @@ class DatabaseService {
     return langs;
   }
 
+  Future<LoveLanguage> getLoveLanguage(String id) async {
+    print('get called');
+    DocumentSnapshot doc =
+        await _db.collection(LOVE_LANGUAGES).document(id).get();
+    return LoveLanguage.fromFirestore(doc);
+  }
+
   void saveLoveLangauge(
       {String loveLanguage, String uid, DocumentReference coupleDataRef}) {
     _db

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:karlekstanken/models/couple_data.dart';
+import 'package:karlekstanken/models/love_language.dart';
 import 'package:karlekstanken/models/other_user.dart';
 import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:karlekstanken/screens/home_screen/widgets/detail_page.dart';
 import 'package:karlekstanken/screens/home_screen/widgets/love_language_card.dart';
 import 'package:karlekstanken/screens/pairing_screen/pairing_screen.dart';
+import 'package:karlekstanken/services/database.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -13,6 +16,15 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  User _user;
+  OtherUser _partner;
+
+  Future<LoveLanguage> _userLoveLanguageFuture;
+  Future<LoveLanguage> _partnerLoveLanguageFuture;
+
+  LoveLanguage _userLoveLanguage;
+  LoveLanguage _partnerLoveLanguage;
+
   void _navigateToPairingScreen() {
     Navigator.push(
         context, MaterialPageRoute(builder: (_) => new PairingScreen(null)));
@@ -28,13 +40,57 @@ class _ProfileState extends State<Profile> {
                 )));
   }
 
+  void _getUserLoveLanguage() async {
+    if (_user.loveLanguage != null) {
+      // Cache future so that we don't do a new database call everytime this method is called
+      if (_userLoveLanguageFuture == null)
+        _userLoveLanguageFuture = Provider.of<DatabaseService>(context)
+            .getLoveLanguage(_user.loveLanguage);
+
+      LoveLanguage userLoveLanguage = await _userLoveLanguageFuture;
+      if (this.mounted) {
+        setState(() {
+          _userLoveLanguage = userLoveLanguage;
+        });
+      }
+    }
+  }
+
+  void _getPartnerLoveLanguage() async {
+    CoupleData coupleData = Provider.of<CoupleData>(context);
+    if (_partner != null &&
+        coupleData != null &&
+        coupleData.loveLanguages != null &&
+        coupleData.loveLanguages.containsKey(_partner.uid)) {
+      // Cache future so that we don't do a new database call everytime this method is called
+      if (_partnerLoveLanguageFuture == null)
+        _partnerLoveLanguageFuture = Provider.of<DatabaseService>(context)
+            .getLoveLanguage(coupleData.loveLanguages[_partner.uid]);
+
+      LoveLanguage partnerLoveLanguage = await _partnerLoveLanguageFuture;
+      if (this.mounted) {
+        setState(() {
+          _partnerLoveLanguage = partnerLoveLanguage;
+        });
+      }
+    }
+  }
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+
+    _user = Provider.of<User>(context);
+    _partner = _user?.partner != null ? OtherUser.fromMap(_user.partner) : null;
+
+    _getUserLoveLanguage();
+    _getPartnerLoveLanguage();
+  }
+
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<User>(context);
-    OtherUser partner =
-        user?.partner != null ? OtherUser.fromMap(user.partner) : null;
-    return user != null
-        ? SizedBox.expand(
+    return _user != null
+        ? SingleChildScrollView(
             child: Padding(
                 padding: EdgeInsets.all(8),
                 child: Column(
@@ -43,8 +99,8 @@ class _ProfileState extends State<Profile> {
                     Padding(
                         padding: EdgeInsets.only(top: 32, bottom: 10),
                         child: Text(
-                          partner != null
-                              ? '${MyStrings.you} & ${partner.name}'
+                          _partner != null
+                              ? '${MyStrings.you} & ${_partner.name}'
                               : '${MyStrings.you} & ?',
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -52,7 +108,7 @@ class _ProfileState extends State<Profile> {
                               fontStyle: FontStyle.italic,
                               fontWeight: FontWeight.w300),
                         )),
-                    partner == null
+                    _partner == null
                         ? FlatButton(
                             child: Text(
                               MyStrings.addPartner,
@@ -63,20 +119,24 @@ class _ProfileState extends State<Profile> {
                     SizedBox(
                       height: 20,
                     ),
-                    LoveLanguageCard(
-                      header: 'John\'s kärleksspråk',
-                      text: 'Uppskattande ord',
-                      onTap: () => _showDetailPage('Uppskattande ord (A)',
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed cursus ex. Aliquam neque velit, tincidunt id lectus vel, eleifend feugiat ligula. Nullam ipsum metus, faucibus sed sodales eget, blandit eget tortor. Ut maximus et lacus et gravida. In eu feugiat mauris. Donec venenatis id turpis ut consequat. Donec ut sem et ex facilisis interdum. Suspendisse ut blandit sapien. Ut blandit erat nulla, ac dictum justo congue vel. Curabitur commodo, tellus sit amet sodales pulvinar, lacus purus accumsan mauris, sodales suscipit nulla dui id velit. Aenean sodales vestibulum est, eu blandit sapien auctor quis. Praesent volutpat ante ac risus venenatis tincidunt. Aliquam viverra purus imperdiet sapien tincidunt blandit. Curabitur ac eleifend ligula, a laoreet sapien.'),
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    LoveLanguageCard(
-                        header: 'Ditt kärleksspråk',
-                        text: 'Gåvor',
-                        onTap: () => _showDetailPage('Gåvor (B)',
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed cursus ex. Aliquam neque velit, tincidunt id lectus vel, eleifend feugiat ligula. Nullam ipsum metus, faucibus sed sodales eget, blandit eget tortor. Ut maximus et lacus et gravida. In eu feugiat mauris. Donec venenatis id turpis ut consequat. Donec ut sem et ex facilisis interdum. Suspendisse ut blandit sapien. Ut blandit erat nulla, ac dictum justo congue vel. Curabitur commodo, tellus sit amet sodales pulvinar, lacus purus accumsan mauris, sodales suscipit nulla dui id velit. Aenean sodales vestibulum est, eu blandit sapien auctor quis. Praesent volutpat ante ac risus venenatis tincidunt. Aliquam viverra purus imperdiet sapien tincidunt blandit. Curabitur ac eleifend ligula, a laoreet sapien.')),
+                    if (_partnerLoveLanguage != null) ...[
+                      LoveLanguageCard(
+                          header: '${_partner.name}\'s kärleksspråk',
+                          text: _partnerLoveLanguage.title,
+                          onTap: () => _showDetailPage(
+                              '${_partnerLoveLanguage.title} (${_partnerLoveLanguage.id})',
+                              _partnerLoveLanguage.description)),
+                      SizedBox(
+                        height: 8,
+                      )
+                    ],
+                    if (_userLoveLanguage != null)
+                      LoveLanguageCard(
+                          header: MyStrings.yourLoveLanguage,
+                          text: _userLoveLanguage.title,
+                          onTap: () => _showDetailPage(
+                              '${_userLoveLanguage.title} (${_userLoveLanguage.id})',
+                              _userLoveLanguage.description)),
                   ],
                 )))
         : SizedBox();
