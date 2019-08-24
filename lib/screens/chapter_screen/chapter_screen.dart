@@ -71,8 +71,11 @@ class _ChapterScreenState extends State<ChapterScreen> {
     bool isChapterCompleted =
         isTaskCompleted && _isTasksCompleted(taskIds, _completionStatus?.tasks);
 
-    _dbService.updateChapterCompletionStatus(_user.coupleDataRef, _chapter.id,
-        isChapterCompleted, taskId, isTaskCompleted);
+    _dbService.updateChapterCompletionStatus(
+        coupleDataRef: _user.coupleDataRef,
+        chapterId: _chapter.id,
+        isChapterCompleted: isChapterCompleted,
+        tasks: {taskId: isTaskCompleted});
   }
 
   bool _isTaskCompleted(String id, Map<String, bool> tasks) {

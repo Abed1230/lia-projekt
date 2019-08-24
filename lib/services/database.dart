@@ -71,15 +71,19 @@ class DatabaseService {
   }
 
   void updateChapterCompletionStatus(
-      DocumentReference coupleDataRef,
+      {DocumentReference coupleDataRef,
       String chapterId,
       bool isChapterCompleted,
-      String taskId,
-      bool isTaskCompleted) {
-    coupleDataRef.updateData({
-      'completionStatus.chapters.$chapterId': isChapterCompleted,
-      'completionStatus.tasks.$taskId': isTaskCompleted
+      Map<String, bool> tasks}) {
+    Map<String, bool> data = {
+      'completionStatus.chapters.$chapterId': isChapterCompleted
+    };
+
+    tasks.forEach((id, completed) {
+      data['completionStatus.tasks.$id'] = completed;
     });
+
+    coupleDataRef.updateData(data);
   }
 
   Future<List<my.Query>> getTestQueries() async {

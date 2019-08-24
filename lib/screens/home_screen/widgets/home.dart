@@ -54,6 +54,26 @@ class _HomeState extends State<Home> {
     return count;
   }
 
+  // sets all tasks in given chapter to either completed or not completed
+  void _onCheckTapped(Chapter chapter) {
+    CoupleData coupleData = Provider.of<CoupleData>(context);
+    if (coupleData == null) return;
+
+    bool isChapterCompleted =
+        !_isChapterCompleted(chapter.id, coupleData.completionStatus?.chapters);
+
+    Map<String, bool> tasks = chapter.tasks.fold({}, (result, task) {
+      result[task.id] = isChapterCompleted;
+      return result;
+    });
+
+    Provider.of<DatabaseService>(context).updateChapterCompletionStatus(
+        coupleDataRef: Provider.of<User>(context).coupleDataRef,
+        chapterId: chapter.id,
+        isChapterCompleted: isChapterCompleted,
+        tasks: tasks);
+  }
+
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context);
@@ -61,7 +81,7 @@ class _HomeState extends State<Home> {
         Provider.of<CoupleData>(context)?.completionStatus;
 
     bool showProgressIndicator = user?.partner != null;
-    bool showDoTestButton = true; //user?.licensed;
+    bool showDoTestButton = true; //user?.licensed && user.loveLanguage == null;
 
     return user != null
         ? FutureBuilder(
@@ -82,7 +102,7 @@ class _HomeState extends State<Home> {
                       ),
                       itemBuilder: (context, position) {
                         Chapter chapter = chapters[position];
-                        
+
                         return user.partner != null
                             ? CheckableChapterListItem(
                                 completed: _isChapterCompleted(
@@ -96,9 +116,7 @@ class _HomeState extends State<Home> {
                                         chapter, user.licensed);
                                   }
                                 },
-                                onCheckTapped: () {
-                                  // TODO: mark all tasks in chapter complete
-                                },
+                                onCheckTapped: () => _onCheckTapped(chapter),
                               )
                             : ChapterListItem(
                                 completed: _isChapterCompleted(

@@ -27,7 +27,7 @@ class CheckableChapterListItem extends StatelessWidget {
                 color: disabled ? Colors.black12 : Colors.white,
                 child: !disabled
                     ? Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Expanded(
                               child: Column(
@@ -48,10 +48,12 @@ class CheckableChapterListItem extends StatelessWidget {
                             ],
                           )),
                           VerticalDivider(),
-                          Icon(
-                            Icons.check_circle,
-                            color: completed ? Colors.green : Colors.grey,
-                          )
+                          InkWell(
+                              onTap: onCheckTapped,
+                              child: Icon(
+                                Icons.check_circle,
+                                color: completed ? Colors.green : Colors.grey,
+                              ))
                         ],
                       )
                     : Column(
