@@ -39,7 +39,7 @@ class _HomeState extends State<Home> {
     chapters.forEach((Chapter chapter) {
       chapter.tasks?.forEach((_) => count++);
     });
-    print('total tasks: $count');
+
     return count;
   }
 
@@ -50,11 +50,11 @@ class _HomeState extends State<Home> {
     tasks.forEach((id, completed) {
       if (completed) count++;
     });
-    print('completed tasks: $count');
+
     return count;
   }
 
-  // sets all tasks in given chapter to either completed or not completed
+  // sets all tasks in chapter to either complete or incomplete
   void _onCheckTapped(Chapter chapter) {
     CoupleData coupleData = Provider.of<CoupleData>(context);
     if (coupleData == null) return;
@@ -80,7 +80,6 @@ class _HomeState extends State<Home> {
     CompletionStatus completionStatus =
         Provider.of<CoupleData>(context)?.completionStatus;
 
-    bool showProgressIndicator = user?.partner != null;
     bool showDoTestButton = true; //user?.licensed && user.loveLanguage == null;
 
     return user != null
@@ -97,7 +96,7 @@ class _HomeState extends State<Home> {
                     margin: EdgeInsets.only(bottom: showDoTestButton ? 50 : 0),
                     child: ListView.builder(
                       padding: EdgeInsets.only(
-                        top: showProgressIndicator ? 110 : 0,
+                        top: 110,
                         //bottom: showDoTestButton ? 60 : 0),
                       ),
                       itemBuilder: (context, position) {
@@ -134,16 +133,12 @@ class _HomeState extends State<Home> {
                       },
                       itemCount: chapters.length,
                     )),
-                Visibility(
-                    visible: showProgressIndicator,
-                    child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Padding(
-                            padding: EdgeInsets.only(top: 16),
-                            child: MyProgressIndicator(
-                                _getTasksTotal(chapters),
-                                _getCompletedTasksTotal(
-                                    completionStatus?.tasks))))),
+                Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                        padding: EdgeInsets.only(top: 16),
+                        child: MyProgressIndicator(_getTasksTotal(chapters),
+                            _getCompletedTasksTotal(completionStatus?.tasks)))),
                 Visibility(
                     visible: showDoTestButton,
                     child: Align(
