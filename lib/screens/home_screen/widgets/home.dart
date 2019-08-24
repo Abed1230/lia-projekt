@@ -10,6 +10,8 @@ import 'package:karlekstanken/services/database.dart';
 import 'package:karlekstanken/widgets/chapter_list_item.dart';
 import 'package:provider/provider.dart';
 
+import 'checkable_chapter_list_item.dart';
+
 class Home extends StatefulWidget {
   const Home();
 
@@ -76,21 +78,41 @@ class _HomeState extends State<Home> {
                     child: ListView.builder(
                       padding: EdgeInsets.only(
                         top: showProgressIndicator ? 110 : 0,
-                      ), //bottom: showDoTestButton ? 60 : 0),
+                        //bottom: showDoTestButton ? 60 : 0),
+                      ),
                       itemBuilder: (context, position) {
                         Chapter chapter = chapters[position];
-                        return ChapterListItem(
-                          completed: _isChapterCompleted(
-                              chapter.id, completionStatus?.chapters),
-                          disabled: chapter.isPreview,
-                          title: chapter.title,
-                          description: chapter.previewText,
-                          onTap: () {
-                            if (!chapter.isPreview) {
-                              _navigateToChapterScreen(chapter, user.licensed);
-                            }
-                          },
-                        );
+                        
+                        return user.partner != null
+                            ? CheckableChapterListItem(
+                                completed: _isChapterCompleted(
+                                    chapter.id, completionStatus?.chapters),
+                                disabled: chapter.isPreview,
+                                title: chapter.title,
+                                description: chapter.previewText,
+                                onTap: () {
+                                  if (!chapter.isPreview) {
+                                    _navigateToChapterScreen(
+                                        chapter, user.licensed);
+                                  }
+                                },
+                                onCheckTapped: () {
+                                  // TODO: mark all tasks in chapter complete
+                                },
+                              )
+                            : ChapterListItem(
+                                completed: _isChapterCompleted(
+                                    chapter.id, completionStatus?.chapters),
+                                disabled: chapter.isPreview,
+                                title: chapter.title,
+                                description: chapter.previewText,
+                                onTap: () {
+                                  if (!chapter.isPreview) {
+                                    _navigateToChapterScreen(
+                                        chapter, user.licensed);
+                                  }
+                                },
+                              );
                       },
                       itemCount: chapters.length,
                     )),
