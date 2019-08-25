@@ -80,7 +80,8 @@ class _HomeState extends State<Home> {
     CompletionStatus completionStatus =
         Provider.of<CoupleData>(context)?.completionStatus;
 
-    bool showDoTestButton = true; //user?.licensed && user.loveLanguage == null;
+    bool showDoTestButton =
+        user != null && user.licensed && user.loveLanguage == null;
 
     return user != null
         ? FutureBuilder(
