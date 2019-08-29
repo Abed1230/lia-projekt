@@ -1,38 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_strings.dart';
-import 'package:karlekstanken/screens/pairing_screen/pairing_screen.dart';
-import 'package:karlekstanken/services/database.dart';
-import 'package:provider/provider.dart';
+import 'package:karlekstanken/screens/home_screen/widgets/home.dart';
+import 'package:karlekstanken/screens/home_screen/widgets/profile.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen(this._userId);
-
-  final String _userId;
-
   @override
   State<StatefulWidget> createState() => new _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+  List<Widget> _children;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  void initState() {
+    _children = <Widget>[const Home(), Profile()];
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(context.toString());
     return Scaffold(
       appBar: AppBar(
-        title: Text(MyStrings.homeScreenTitle),
+        title: Center(child: Text(MyStrings.appName)),
       ),
-      body: Center(
-          child: RaisedButton(
-        child: Text('Parning'),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => StreamProvider<User>.value(
-                      value: Provider.of<DatabaseService>(context).streamUser(widget._userId), child: PairingScreen(widget._userId))));
-        },
-      )),
+      body: _children[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text(MyStrings.home),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            title: Text(MyStrings.profile),
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }

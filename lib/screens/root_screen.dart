@@ -1,10 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/screens/home_screen/home_screen.dart';
 import 'package:karlekstanken/screens/unauthenticated_screen/unathenticated_screen.dart';
-import 'package:karlekstanken/services/database.dart';
-import 'package:provider/provider.dart';
 
 enum AuthStatus { UNDETERMINED, SIGNED_IN, NOT_SIGNED_IN }
 
@@ -61,10 +58,7 @@ class _RootScreenState extends State<RootScreen> {
       case AuthStatus.NOT_SIGNED_IN:
         return new UnauthenticatedScreen(_onSignedIn);
       case AuthStatus.SIGNED_IN:
-        DatabaseService dbService = Provider.of<DatabaseService>(context);
-        return new StreamProvider<User>.value(
-            value: dbService.streamUser(_userId),
-            child: new HomeScreen(_userId));
+        return new HomeScreen();
       default:
         return _buildWaitingScreen();
     }
