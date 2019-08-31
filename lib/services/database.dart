@@ -13,17 +13,17 @@ class DatabaseService {
   static const String LOVE_LANGUAGE_TEST_QUERIES = 'loveLanguageTestQueries';
   static const String LOVE_LANGUAGES = 'loveLanguages';
 
+  static const String POSITION = 'position';
+
   final Firestore _db = Firestore.instance;
 
   Future<List<Chapter>> getChapters(bool licensed) async {
     QuerySnapshot query = await _db
         .collection(licensed ? CHAPTERS_PAID : CHAPTERS_FREE)
+        .orderBy(POSITION)
         .getDocuments();
     List<DocumentSnapshot> docs = query.documents;
-    List<Chapter> chapters =
-        docs.map((doc) => Chapter.fromFirestore(doc)).toList();
-    chapters.sort((a, b) => a.title.compareTo(b.title));
-    return chapters;
+    return docs.map((doc) => Chapter.fromFirestore(doc)).toList();
   }
 
   Future<List<Task>> getTasks(String docId, bool licensed) async {
@@ -41,6 +41,7 @@ class DatabaseService {
   Future<List<Chapter>> getChaptersWithTasks(bool licensed) async {
     QuerySnapshot query = await _db
         .collection(licensed ? CHAPTERS_PAID : CHAPTERS_FREE)
+        .orderBy(POSITION)
         .getDocuments();
 
     List<DocumentSnapshot> docs = query.documents;
@@ -51,7 +52,6 @@ class DatabaseService {
     }).toList();
     Future<List<Chapter>> futureList = Future.wait(mappedList);
     List<Chapter> chapters = await futureList;
-    chapters.sort((a, b) => a.title.compareTo(b.title));
     return chapters;
   }
 
