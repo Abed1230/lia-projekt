@@ -12,9 +12,10 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = new GlobalKey<FormState>();
 
+  String _name;
   String _email;
   String _password;
-  String _errorMessage;
+  String _errorMessage = '';
 
   bool _validateAndSave() {
     FormState form = _formKey.currentState;
@@ -56,21 +57,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  String _validateSecondPasswordField(String value) {
-    if (value.isEmpty) {
-      return MyStrings.passwordRequired;
-    } else if (value != _password) {
-      return MyStrings.passwordMismatchMsg;
-    }
-    return null;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _errorMessage = '';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,6 +70,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Column(
             children: <Widget>[
               TextFormField(
+                decoration: InputDecoration(labelText: MyStrings.fullName),
+                keyboardType: TextInputType.text,
+                onSaved: (value) => _name = value,
+                validator: (value) =>
+                    value.isEmpty ? MyStrings.nameRequired : null,
+              ),
+              TextFormField(
                 decoration: InputDecoration(labelText: MyStrings.email),
                 keyboardType: TextInputType.emailAddress,
                 onSaved: (value) => _email = value,
@@ -96,12 +89,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 onSaved: (value) => _password = value,
                 validator: (value) =>
                     value.isEmpty ? MyStrings.passwordRequired : null,
-              ),
-              TextFormField(
-                decoration:
-                    InputDecoration(labelText: MyStrings.repeatPassword),
-                obscureText: true,
-                validator: _validateSecondPasswordField,
               ),
               _showErrorMessage(),
               RaisedButton(

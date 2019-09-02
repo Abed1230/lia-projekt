@@ -21,6 +21,8 @@ class MyStrings {
       'Det finns redan en användare med den angivna epost addressen';
   static const shortPasswordMsg = 'Lösenordet måste bestå av minst 6 tecken';
   static const signUpScreenTitle = 'Registrering';
+  static const fullName = 'Fullständigt namn';
+  static const nameRequired = 'Namn krävs';
 
   // Sign in screen
   static const signUpBtn = 'Har du inget konto? Skapa här';
