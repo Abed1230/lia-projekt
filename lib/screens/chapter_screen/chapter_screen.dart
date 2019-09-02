@@ -14,7 +14,6 @@ class ChapterScreen extends StatefulWidget {
 
   final Chapter _chapter;
   final bool _licensed;
-
   @override
   _ChapterScreenState createState() => _ChapterScreenState();
 }
@@ -27,6 +26,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
   User _user;
   CoupleData _coupleData;
   CompletionStatus _completionStatus;
+  int _selectedVideo = 0;
 
   @override
   void initState() {
@@ -107,14 +107,25 @@ class _ChapterScreenState extends State<ChapterScreen> {
             delegate: SliverChildListDelegate([
               Column(
                 children: <Widget>[
-                  MyVideoPlayer(_chapter.videoUrls?.elementAt(0)),
+                  MyVideoPlayer(_chapter.videoUrls?.elementAt(_selectedVideo)),
                   Padding(
                     padding: EdgeInsets.all(8.0),
                   ),
-                  MyVideoPlayer(_chapter.videoUrls?.elementAt(1)),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(_chapter.mainText),
+                  RaisedButton(
+                    onPressed: () {
+                      setState(() {
+                        if (_selectedVideo == 0) {
+                          _selectedVideo = 1;
+                        } else {
+                          _selectedVideo = 0;
+                        }
+                        print(_selectedVideo);
+                      });
+                    },
+                    child: const Text(
+                      'Byt video',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                   MyAudioPlayer(url: _chapter.audioUrl),
                   _tasks == null
