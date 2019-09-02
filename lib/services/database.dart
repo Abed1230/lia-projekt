@@ -31,11 +31,10 @@ class DatabaseService {
         .collection(licensed ? CHAPTERS_PAID : CHAPTERS_FREE)
         .document(docId)
         .collection(TASKS)
+        .orderBy(POSITION)
         .getDocuments();
     List<DocumentSnapshot> docs = query.documents;
-    List<Task> tasks = docs.map((doc) => Task.fromFirestore(doc)).toList();
-    tasks.sort((a, b) => a.title.compareTo(b.title));
-    return tasks;
+    return docs.map((doc) => Task.fromFirestore(doc)).toList();
   }
 
   Future<List<Chapter>> getChaptersWithTasks(bool licensed) async {
@@ -109,7 +108,6 @@ class DatabaseService {
   }
 
   Future<LoveLanguage> getLoveLanguage(String id) async {
-    print('get called');
     DocumentSnapshot doc =
         await _db.collection(LOVE_LANGUAGES).document(id).get();
     return LoveLanguage.fromFirestore(doc);
