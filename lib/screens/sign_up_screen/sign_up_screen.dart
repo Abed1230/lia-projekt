@@ -4,7 +4,8 @@ import 'package:karlekstanken/auth_error_codes.dart';
 import 'package:karlekstanken/my_colors.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:karlekstanken/services/database.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -53,11 +54,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       try {
         FirebaseUser user = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password);
-        // Create user document in datbaase
-        Firestore.instance
-            .collection('users')
-            .document(user.uid)
-            .setData({'licensed': false});
+
+        Provider.of<DatabaseService>(context)
+            .createUserDocument(userId: user.uid, email: _email, name: _name);
+
         Navigator.pop(context, true);
       } catch (e) {
         String msg = '';

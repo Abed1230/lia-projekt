@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:karlekstanken/models/chapter.dart';
 import 'package:karlekstanken/models/couple_data.dart';
 import 'package:karlekstanken/models/love_language.dart';
@@ -16,6 +17,8 @@ class DatabaseService {
   static const String POSITION = 'position';
 
   final Firestore _db = Firestore.instance;
+
+  // ---------------------- GET OPERATIONS ------------------------
 
   Future<List<Chapter>> getChapters(bool licensed) async {
     QuerySnapshot query = await _db
@@ -54,37 +57,6 @@ class DatabaseService {
     return chapters;
   }
 
-  Stream<User> streamUser(String uid) {
-    if (uid == null) return Stream<User>.empty();
-    return _db
-        .collection(USERS)
-        .document(uid)
-        .snapshots()
-        .map((snap) => User.fromFirestore(snap));
-  }
-
-  Stream<CoupleData> streamCoupleData(DocumentReference ref) {
-    if (ref == null) return Stream<CoupleData>.empty();
-
-    return ref.snapshots().map((snap) => CoupleData.fromMap(snap.data));
-  }
-
-  void updateChapterCompletionStatus(
-      {DocumentReference coupleDataRef,
-      String chapterId,
-      bool isChapterCompleted,
-      Map<String, bool> tasks}) {
-    Map<String, bool> data = {
-      'completionStatus.chapters.$chapterId': isChapterCompleted
-    };
-
-    tasks.forEach((id, completed) {
-      data['completionStatus.tasks.$id'] = completed;
-    });
-
-    coupleDataRef.updateData(data);
-  }
-
   Future<List<my.Query>> getTestQueries() async {
     QuerySnapshot snapshot = await _db
         .collection(LOVE_LANGUAGE_TEST_QUERIES)
@@ -113,6 +85,39 @@ class DatabaseService {
     return LoveLanguage.fromFirestore(doc);
   }
 
+  Stream<User> streamUser(String uid) {
+    if (uid == null) return Stream<User>.empty();
+    return _db
+        .collection(USERS)
+        .document(uid)
+        .snapshots()
+        .map((snap) => User.fromFirestore(snap));
+  }
+
+  Stream<CoupleData> streamCoupleData(DocumentReference ref) {
+    if (ref == null) return Stream<CoupleData>.empty();
+
+    return ref.snapshots().map((snap) => CoupleData.fromMap(snap.data));
+  }
+
+  // ---------------------- UPDATE OPERATIONS ------------------------
+
+  void updateChapterCompletionStatus(
+      {DocumentReference coupleDataRef,
+      String chapterId,
+      bool isChapterCompleted,
+      Map<String, bool> tasks}) {
+    Map<String, bool> data = {
+      'completionStatus.chapters.$chapterId': isChapterCompleted
+    };
+
+    tasks.forEach((id, completed) {
+      data['completionStatus.tasks.$id'] = completed;
+    });
+
+    coupleDataRef.updateData(data);
+  }
+
   void saveLoveLangauge(
       {String loveLanguage, String uid, DocumentReference coupleDataRef}) {
     _db
@@ -121,4 +126,18 @@ class DatabaseService {
         .updateData({'loveLanguage': loveLanguage});
     coupleDataRef.updateData({'loveLanguages.$uid': loveLanguage});
   }
+
+  // ---------------------- CREATE OPERATIONS ------------------------
+
+  void createUserDocument(
+      {@required String userId,
+      @required String email,
+      @required String name}) {
+    _db
+        .collection(USERS)
+        .document(userId)
+        .setData({'email': email, 'name': name, 'licensed': false});
+  }
+
+  // ---------------------- DELETE OPERATIONS ------------------------
 }
