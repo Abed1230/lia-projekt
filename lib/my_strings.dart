@@ -3,16 +3,19 @@ class MyStrings {
 
   // Test screen
   static const testTitle = 'Kärleksspråktestet';
-  static const testDescription = 'Ta reda på vilket kärleksspråk du har genom att välja de påståenden som bäst stämmer in på dig';
+  static const testDescription =
+      'Ta reda på vilket kärleksspråk du har genom att välja de påståenden som bäst stämmer in på dig';
   static const start = 'Starta';
   static const finishPageTitle = 'Ditt kärlekspråk är:';
-  static const chooseLoveLanguageMsg = 'Välj det kärleksspråk som du känner stämmer mest in på dig';
+  static const chooseLoveLanguageMsg =
+      'Välj det kärleksspråk som du känner stämmer mest in på dig';
   static const saveAndQuit = 'Spara och avsluta';
   static const quit = 'Avsluta';
   static const previous = 'Föregående';
-  
+
   // Unauthenticated screen
-  static const notSignedInMsg = 'Du är inte inloggad och därmed begränsad till introduktionen';
+  static const notSignedInMsg =
+      'Du är inte inloggad och därmed begränsad till introduktionen';
 
   // Sign up screen
   static const passwordMismatchMsg = 'Lösenorden matchar inte';
@@ -33,7 +36,13 @@ class MyStrings {
   static const signUpBtn = 'Har du inget konto? Skapa här';
   static const wrongPassword = 'Fel lösenord';
   static const signInScreenTitle = 'Inloggning';
-
+  static const passwordResetScreenTitle = 'Återställ lösenord';
+  static const forgotPasswordMsg = 'Glömt lösenord?';
+  static const send = 'Skicka';
+  static const passwordResetInfo =
+      'Ange den e-postadress som du använde när du registrerade dig. Vi skickar en länk där du kan återställa ditt lösenord';
+  static const passwordResetSentMsg =
+      'Vi har skickat en länk till din e-postadress där du kan återställa ditt lösenord';
   // Home Screen
   static const home = 'Hem';
   static const profile = 'Profil';
@@ -54,7 +63,8 @@ class MyStrings {
   static const receiverHasPartnerMsg = 'användaren har redan partner';
   static const receiverHasRequestMsg = 'användare har redan partner förfrågan';
   static const arePartners = 'är partners';
-  static const cannotSendPartnerReqToSelfMsg = 'Du kan inte skicka partner förfrågan till dig själv';
+  static const cannotSendPartnerReqToSelfMsg =
+      'Du kan inte skicka partner förfrågan till dig själv';
 
   // Common
   static const you = 'Du';

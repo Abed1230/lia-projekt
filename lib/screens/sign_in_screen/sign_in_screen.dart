@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:karlekstanken/auth_error_codes.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:karlekstanken/screens/sign_in_screen/widgets/password_reset_screen.dart';
 
 class SignInScreen extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() => new _SignInScreenState();
 }
@@ -14,7 +14,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   String _email;
   String _password;
-  String _errorMessage;
+  String _errorMessage = '';
 
   bool _validateAndSave() {
     FormState form = _formKey.currentState;
@@ -55,12 +55,6 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _errorMessage = '';
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -91,13 +85,16 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: Text(MyStrings.signIn),
                 onPressed: _validateAndSubmit,
               ),
-              /* FlatButton(
+              FlatButton(
                 child: Text(
-                  MyStrings.signUpBtn,
+                  MyStrings.forgotPasswordMsg,
                   style: TextStyle(color: Colors.black45),
                 ),
-                onPressed: _navigateToSignUpScreen,
-              ), */
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => PasswordResetScreen(_email)));
+                },
+              ),
             ],
           ),
         ),
