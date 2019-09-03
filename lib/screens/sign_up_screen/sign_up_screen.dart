@@ -5,6 +5,7 @@ import 'package:karlekstanken/my_colors.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -12,6 +13,12 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  // TODO: update with correct url
+  static const _TERMS_AND_CONDITIONS_URL =
+      'http://www.kärlekstanken.se/privacypolicy.php';
+  static const _PRIVACY_POLICY_URL =
+      'http://www.kärlekstanken.se/privacypolicy.php';
+
   final _formKey = new GlobalKey<FormState>();
 
   String _name;
@@ -72,6 +79,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _errorMessage = msg;
         });
       }
+    }
+  }
+
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
     }
   }
 
@@ -169,14 +182,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             style: TextStyle(
                                 color: Colors.blue,
                                 decoration: TextDecoration.underline),
-                            recognizer: TapGestureRecognizer()..onTap = () {}),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap =
+                                  () => _launchURL(_TERMS_AND_CONDITIONS_URL)),
                         TextSpan(text: '${MyStrings.andHaveRead} '),
                         TextSpan(
                             text: MyStrings.thePrivacyPolicy,
                             style: TextStyle(
                                 color: Colors.blue,
                                 decoration: TextDecoration.underline),
-                            recognizer: TapGestureRecognizer()..onTap = () {}),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => _launchURL(_PRIVACY_POLICY_URL)),
                       ]),
                 )),
               ],
