@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:karlekstanken/auth_error_codes.dart';
+import 'package:karlekstanken/my_colors.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,11 +19,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _password;
   String _errorMessage = '';
 
+  bool _termsChecked = false;
+  bool _showCheckBoxErrorMsg = false;
+
   bool _validateAndSave() {
+    setState(() {
+      _showCheckBoxErrorMsg = false;
+    });
+
     FormState form = _formKey.currentState;
     form.save();
-    if (form.validate()) {
+    if (form.validate() && _termsChecked) {
       return true;
+    }
+
+    if (!_termsChecked) {
+      setState(() {
+        _showCheckBoxErrorMsg = true;
+      });
     }
     return false;
   }
@@ -32,7 +47,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         FirebaseUser user = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password);
         // Create user document in datbaase
-        Firestore.instance.collection('users').document(user.uid).setData({'licensed' : false});
+        Firestore.instance
+            .collection('users')
+            .document(user.uid)
+            .setData({'licensed': false});
         Navigator.pop(context, true);
       } catch (e) {
         String msg = '';
@@ -90,6 +108,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 validator: (value) =>
                     value.isEmpty ? MyStrings.passwordRequired : null,
               ),
+              _buildTermsConditionsCheckbox(),
               _showErrorMessage(),
               RaisedButton(
                 child: Text(MyStrings.signUp),
@@ -120,5 +139,57 @@ class _SignUpScreenState extends State<SignUpScreen> {
         height: 0.0,
       );
     }
+  }
+
+  Widget _buildTermsConditionsCheckbox() {
+    return Container(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Checkbox(
+                  value: _termsChecked,
+                  onChanged: (bool value) =>
+                      setState(() => _termsChecked = value),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                    child: RichText(
+                  softWrap: true,
+                  text: TextSpan(
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(text: '${MyStrings.iAccept} '),
+                        TextSpan(
+                            text: '${MyStrings.theUserTerms} ',
+                            style: TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline),
+                            recognizer: TapGestureRecognizer()..onTap = () {}),
+                        TextSpan(text: '${MyStrings.andHaveRead} '),
+                        TextSpan(
+                            text: MyStrings.thePrivacyPolicy,
+                            style: TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline),
+                            recognizer: TapGestureRecognizer()..onTap = () {}),
+                      ]),
+                )),
+              ],
+            ),
+            if (_showCheckBoxErrorMsg)
+              Padding(
+                padding: EdgeInsets.only(left: 58),
+                child: Text(
+                  MyStrings.isRequired,
+                  style: TextStyle(color: MyColors.errorRed, fontSize: 12),
+                ),
+              ),
+          ],
+        ));
   }
 }

@@ -23,6 +23,11 @@ class MyStrings {
   static const signUpScreenTitle = 'Registrering';
   static const fullName = 'Fullständigt namn';
   static const nameRequired = 'Namn krävs';
+  static const isRequired = 'Krävs';
+  static const iAccept = 'Jag accepterar';
+  static const theUserTerms = 'användarvilkoren';
+  static const andHaveRead = 'och har läst';
+  static const thePrivacyPolicy = 'integritetspolicyn';
 
   // Sign in screen
   static const signUpBtn = 'Har du inget konto? Skapa här';

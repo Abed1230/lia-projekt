@@ -6,4 +6,6 @@ class MyColors {
 
   static Color secondary = Color.fromRGBO(13, 13, 13, 100); //#212121 = dark gray
   static Color secondaryVariant = Color.fromRGBO(97, 97, 97, 100); //#616161 = mild gray
+
+  static const Color errorRed = const Color(0xFFe53935);
 }
