@@ -8,7 +8,11 @@ class MyProgressIndicator extends StatelessWidget {
   final int _completedTasks;
 
   double _calculateValue() {
-    return (_completedTasks / _totalTasks);
+    if (_completedTasks == 0 && _totalTasks == 0) return 0;
+    if (_completedTasks == 1 && _totalTasks == 0) return 0;
+
+    double value = (_completedTasks / _totalTasks);
+    return value > 1.0 ? 1.0 : value;
   }
 
   Path _buildHeartPath() {
