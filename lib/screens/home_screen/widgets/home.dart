@@ -43,12 +43,24 @@ class _HomeState extends State<Home> {
     return count;
   }
 
-  int _getCompletedTasksTotal(Map<String, bool> tasks) {
+  /* There can be completed tasks that doesn't actually exist in any of the chapters, 
+  this is because as of right now when we delete a chapter or task from the database
+  we don't delete any references to it. Therefore this method ignores completed tasks
+  that dosen't exist anymore. */
+  int _getCompletedTasksTotal(Map<String, bool> tasks, List<Chapter> chapters) {
     if (tasks == null) return 0;
+
+    // ids of actual avaiable tasks from all chapters
+    List<String> taskIds = chapters.fold([], (result, chapter) {
+      chapter.tasks.forEach((task) {
+        result.add(task.id);
+      });
+      return result;
+    });
 
     int count = 0;
     tasks.forEach((id, completed) {
-      if (completed) count++;
+      if (taskIds.contains(id) && completed) count++;
     });
 
     return count;
@@ -138,8 +150,10 @@ class _HomeState extends State<Home> {
                     alignment: Alignment.topCenter,
                     child: Padding(
                         padding: EdgeInsets.only(top: 16),
-                        child: MyProgressIndicator(_getTasksTotal(chapters),
-                            _getCompletedTasksTotal(completionStatus?.tasks)))),
+                        child: MyProgressIndicator(
+                            _getTasksTotal(chapters),
+                            _getCompletedTasksTotal(
+                                completionStatus?.tasks, chapters)))),
                 Visibility(
                     visible: showDoTestButton,
                     child: Align(
