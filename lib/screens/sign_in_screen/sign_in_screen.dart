@@ -3,6 +3,7 @@ import 'package:karlekstanken/auth_error_codes.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:karlekstanken/screens/sign_in_screen/widgets/password_reset_screen.dart';
+import 'package:karlekstanken/utils/validators.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -70,8 +71,9 @@ class _SignInScreenState extends State<SignInScreen> {
                 decoration: InputDecoration(labelText: MyStrings.email),
                 keyboardType: TextInputType.emailAddress,
                 onSaved: (value) => _email = value,
-                validator: (value) =>
-                    value.isEmpty ? MyStrings.emailRequired : null,
+                validator: (value) => Validators.validateEmail(value)
+                    ? null
+                    : MyStrings.invalidEmail,
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: MyStrings.password),

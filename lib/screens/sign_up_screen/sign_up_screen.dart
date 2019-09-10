@@ -5,6 +5,7 @@ import 'package:karlekstanken/my_colors.dart';
 import 'package:karlekstanken/my_strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:karlekstanken/services/database.dart';
+import 'package:karlekstanken/utils/validators.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -111,15 +112,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 decoration: InputDecoration(labelText: MyStrings.email),
                 keyboardType: TextInputType.emailAddress,
                 onSaved: (value) => _email = value,
-                validator: (value) =>
-                    value.isEmpty ? MyStrings.emailRequired : null,
+                validator: (value) => Validators.validateEmail(value)
+                    ? null
+                    : MyStrings.invalidEmail,
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: MyStrings.password),
                 obscureText: true,
                 onSaved: (value) => _password = value,
                 validator: (value) =>
-                    value.isEmpty ? MyStrings.passwordRequired : null,
+                    value.length < 6 ? MyStrings.shortPasswordMsg : null,
               ),
               _buildTermsConditionsCheckbox(),
               _showErrorMessage(),
@@ -178,14 +180,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       children: [
                         TextSpan(text: '${MyStrings.iAccept} '),
                         TextSpan(
-                            text: '${MyStrings.theUserTerms} ',
+                            text: '${MyStrings.theUserTerms}',
                             style: TextStyle(
                                 color: Colors.blue,
                                 decoration: TextDecoration.underline),
                             recognizer: TapGestureRecognizer()
                               ..onTap =
                                   () => _launchURL(_TERMS_AND_CONDITIONS_URL)),
-                        TextSpan(text: '${MyStrings.andHaveRead} '),
+                        TextSpan(text: ' ${MyStrings.andHaveRead} '),
                         TextSpan(
                             text: MyStrings.thePrivacyPolicy,
                             style: TextStyle(
