@@ -3,6 +3,7 @@ import 'package:karlekstanken/models/other_user.dart';
 import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/my_cloud_functions_error_codes.dart';
 import 'package:karlekstanken/my_strings.dart';
+import 'package:karlekstanken/screens/home_screen/home_screen.dart';
 import 'package:karlekstanken/utils/validators.dart';
 import 'package:karlekstanken/widgets/error_message.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -120,6 +121,13 @@ class _PairingScreenState extends State<PairingScreen> {
     }
   }
 
+  void _onClosePressed() {
+    Navigator.of(context).canPop()
+        ? Navigator.pop(context)
+        : Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -132,6 +140,8 @@ class _PairingScreenState extends State<PairingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading:
+              IconButton(icon: Icon(Icons.close), onPressed: _onClosePressed),
           title: Text(MyStrings.pairingScreenTitle),
         ),
         body: Stack(
