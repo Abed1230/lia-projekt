@@ -5,6 +5,7 @@ import 'package:karlekstanken/models/couple_data.dart';
 import 'package:karlekstanken/models/user.dart';
 import 'package:karlekstanken/screens/chapter_screen/widgets/task_list_item.dart';
 import 'package:karlekstanken/services/database.dart';
+import 'package:karlekstanken/utils/util_functions.dart';
 import 'package:karlekstanken/widgets/my_audio_player.dart';
 import 'package:karlekstanken/widgets/my_video_player.dart';
 import 'package:provider/provider.dart';
@@ -107,16 +108,22 @@ class _ChapterScreenState extends State<ChapterScreen> {
             delegate: SliverChildListDelegate([
               Column(
                 children: <Widget>[
-                  MyVideoPlayer(_chapter.videoUrls?.elementAt(0)),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                  ),
-                  MyVideoPlayer(_chapter.videoUrls?.elementAt(1)),
+                  if (_chapter.videoUrls != null &&
+                      UtilFunctions.inBounds(0, _chapter.videoUrls)) ...[
+                    MyVideoPlayer(_chapter.videoUrls[0]),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                    ),
+                  ],
+                  if (_chapter.videoUrls != null &&
+                      UtilFunctions.inBounds(1, _chapter.videoUrls))
+                    MyVideoPlayer(_chapter.videoUrls?.elementAt(1)),
                   Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(_chapter.mainText),
                   ),
-                  MyAudioPlayer(url: _chapter.audioUrl),
+                  if (_chapter.audioUrl != null)
+                    MyAudioPlayer(url: _chapter.audioUrl),
                   _tasks == null
                       ? Center(child: CircularProgressIndicator())
                       : ListView.builder(
