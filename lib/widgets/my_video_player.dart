@@ -1,5 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:karlekstanken/my_strings.dart';
 import 'package:video_player/video_player.dart';
 
 class MyVideoPlayer extends StatefulWidget {
@@ -21,19 +22,25 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
 
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
+      allowMuting: false,
       autoInitialize: true,
       aspectRatio: 16 / 9,
       autoPlay: false,
-      looping: true,
+      looping: false,
       errorBuilder: (context, errorMessage) {
         return Center(
-          child: Text(
-            errorMessage,
-            style: TextStyle(color: Colors.white),
+          child: Padding(
+            padding: EdgeInsets.all(8),
+            child: Text(
+              MyStrings.videoPlayerErrorMsg,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         );
       },
     );
+
     super.initState();
   }
 

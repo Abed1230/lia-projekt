@@ -67,6 +67,9 @@ class MyStrings {
       'Du kan inte skicka partner förfrågan till dig själv';
 
   // Common
+  static const tryAgain = 'Försök igen';
+  static const videoPlayerErrorMsg =
+      'Kunde inte ladda in filmen. Det kan bero på att du inte har någon nätverksanslutning';
   static const you = 'Du';
   static const addPartner = 'Lägg till partner';
   static const userNotFoundMsg =
