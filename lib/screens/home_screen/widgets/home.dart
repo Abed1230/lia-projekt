@@ -20,6 +20,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Future<List<Chapter>> _chaptersFuture;
+  List<Chapter> _chapters;
+
   void _navigateToChapterScreen(Chapter chapter, bool licensed) {
     Navigator.push(
         context,
@@ -35,6 +38,8 @@ class _HomeState extends State<Home> {
   }
 
   int _getTasksTotal(List<Chapter> chapters) {
+    if (chapters == null) return 0;
+
     int count = 0;
     chapters.forEach((Chapter chapter) {
       chapter.tasks?.forEach((_) => count++);
@@ -48,7 +53,7 @@ class _HomeState extends State<Home> {
   we don't delete any references to it. Therefore this method ignores completed tasks
   that dosen't exist anymore. */
   int _getCompletedTasksTotal(Map<String, bool> tasks, List<Chapter> chapters) {
-    if (tasks == null) return 0;
+    if (tasks == null || chapters == null) return 0;
 
     // ids of actual avaiable tasks from all chapters
     List<String> taskIds = chapters.fold([], (result, chapter) {
@@ -86,6 +91,29 @@ class _HomeState extends State<Home> {
         tasks: tasks);
   }
 
+  void _getChapters() async {
+    User user = Provider.of<User>(context);
+
+    if (user == null) return;
+
+    if (_chaptersFuture == null) {
+      _chaptersFuture = Provider.of<DatabaseService>(context)
+          .getChaptersWithTasks(user.licensed ? true : false);
+    }
+    List<Chapter> chapters = await _chaptersFuture;
+    if (this.mounted) {
+      setState(() {
+        _chapters = chapters;
+      });
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getChapters();
+  }
+
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context);
@@ -95,78 +123,65 @@ class _HomeState extends State<Home> {
     bool showDoTestButton =
         user != null && user.licensed && user.loveLanguage == null;
 
-    return user != null
-        ? FutureBuilder(
-            future: Provider.of<DatabaseService>(context)
-                .getChaptersWithTasks(user.licensed ? true : false),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return SizedBox();
+    return Stack(children: <Widget>[
+      if (user != null && _chapters != null)
+        Container(
+            margin: EdgeInsets.only(bottom: showDoTestButton ? 50 : 0),
+            child: ListView.builder(
+              padding: EdgeInsets.only(
+                top: 110,
+                //bottom: showDoTestButton ? 60 : 0),
+              ),
+              itemBuilder: (context, position) {
+                Chapter chapter = _chapters[position];
 
-              List<Chapter> chapters = snapshot.data;
-
-              return Stack(children: <Widget>[
-                Container(
-                    margin: EdgeInsets.only(bottom: showDoTestButton ? 50 : 0),
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(
-                        top: 110,
-                        //bottom: showDoTestButton ? 60 : 0),
-                      ),
-                      itemBuilder: (context, position) {
-                        Chapter chapter = chapters[position];
-
-                        return user.partner != null
-                            ? CheckableChapterListItem(
-                                completed: _isChapterCompleted(
-                                    chapter.id, completionStatus?.chapters),
-                                disabled: chapter.isPreview,
-                                title: chapter.title,
-                                description: chapter.previewText,
-                                onTap: () {
-                                  if (!chapter.isPreview) {
-                                    _navigateToChapterScreen(
-                                        chapter, user.licensed);
-                                  }
-                                },
-                                onCheckTapped: () => _onCheckTapped(chapter),
-                              )
-                            : ChapterListItem(
-                                completed: _isChapterCompleted(
-                                    chapter.id, completionStatus?.chapters),
-                                disabled: chapter.isPreview,
-                                title: chapter.title,
-                                description: chapter.previewText,
-                                onTap: () {
-                                  if (!chapter.isPreview) {
-                                    _navigateToChapterScreen(
-                                        chapter, user.licensed);
-                                  }
-                                },
-                              );
-                      },
-                      itemCount: chapters.length,
-                    )),
-                Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: MyProgressIndicator(
-                            _getTasksTotal(chapters),
-                            _getCompletedTasksTotal(
-                                completionStatus?.tasks, chapters)))),
-                Visibility(
-                    visible: showDoTestButton,
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: const DoTest(),
-                      /* Container(
+                return user.partner != null
+                    ? CheckableChapterListItem(
+                        completed: _isChapterCompleted(
+                            chapter.id, completionStatus?.chapters),
+                        disabled: chapter.isPreview,
+                        title: chapter.title,
+                        description: chapter.previewText,
+                        onTap: () {
+                          if (!chapter.isPreview) {
+                            _navigateToChapterScreen(chapter, user.licensed);
+                          }
+                        },
+                        onCheckTapped: () => _onCheckTapped(chapter),
+                      )
+                    : ChapterListItem(
+                        completed: _isChapterCompleted(
+                            chapter.id, completionStatus?.chapters),
+                        disabled: chapter.isPreview,
+                        title: chapter.title,
+                        description: chapter.previewText,
+                        onTap: () {
+                          if (!chapter.isPreview) {
+                            _navigateToChapterScreen(chapter, user.licensed);
+                          }
+                        },
+                      );
+              },
+              itemCount: _chapters.length,
+            )),
+      Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: MyProgressIndicator(
+                  _getTasksTotal(_chapters),
+                  _getCompletedTasksTotal(
+                      completionStatus?.tasks, _chapters)))),
+      Visibility(
+          visible: showDoTestButton,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: const DoTest(),
+            /* Container(
                         margin: EdgeInsets.only(bottom: 8),
                         child:
                             DoTestButton()), */
-                    ))
-              ]);
-            },
-          )
-        : SizedBox();
+          ))
+    ]);
   }
 }
