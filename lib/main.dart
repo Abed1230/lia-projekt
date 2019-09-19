@@ -21,9 +21,14 @@ class MyApp extends StatelessWidget {
             child: MyUserProxy(
                 child: MyCoupleDataProxy(
                     child: new MaterialApp(
-              title: MyStrings.appName,
-              home: RootScreen(),
-            )))));
+                        title: MyStrings.appName,
+                        home: RootScreen(),
+                        theme: ThemeData(
+                          brightness: Brightness.light,
+                          primaryColor: Colors.white,
+                          accentColor: Color.fromRGBO(255, 76, 76, 1.0),
+                          fontFamily: 'Montserrat',
+                        ))))));
   }
 }
 

@@ -43,7 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        onTap: _onItemTapped,  
+        selectedItemColor: Theme.of(context).accentColor,
       ),
     );
   }
