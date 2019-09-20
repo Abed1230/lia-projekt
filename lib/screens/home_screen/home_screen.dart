@@ -28,7 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text(MyStrings.appName)),
+        title: Center(
+            child: Padding(padding: EdgeInsets.all(10), child: Image(
+          image: AssetImage('assets/images/logo.png'),
+        ))), //Text(MyStrings.appName)
       ),
       body: _children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(

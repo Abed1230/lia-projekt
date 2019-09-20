@@ -58,8 +58,12 @@ class _UnauthenticatedScreenState extends State<UnauthenticatedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Todo: replace with logo
-        title: Center(child: Text(MyStrings.appName)),
+        title: Center(
+            child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Image(
+                  image: AssetImage('assets/images/logo.png'),
+                ))), //Text(MyStrings.appName)
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
